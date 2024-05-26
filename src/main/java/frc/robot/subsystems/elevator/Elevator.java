@@ -44,7 +44,6 @@ public class Elevator extends SubsystemBase {
 
         leftMotor.getConfigurator().apply(leftMotorConfigs);
 
-        // Set the right motor to follow the left motor
         rightMotor.setControl(new Follower(leftMotor.getDeviceID(), true));
 
         BaseStatusSignal.setUpdateFrequencyForAll(

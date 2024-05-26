@@ -21,7 +21,6 @@ public class MoveElevatorToPosition extends Command {
 
     @Override
     public void execute() {
-        // Additional logic if needed
     }
 
     @Override
