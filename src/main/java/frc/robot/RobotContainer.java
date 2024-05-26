@@ -29,10 +29,10 @@ public class RobotContainer {
             .whileTrue(new RunIntake(intake, -4.0));
 
         new Trigger(() -> operatorController.getXButton())
-            .???(new MoveElevatorToPosition(elevator, 10.0));
+            .onTrue(new MoveElevatorToPosition(elevator, 10.0));
 
         new Trigger(() -> operatorController.getYButton())
-            .???(new MoveElevatorToPosition(elevator, 20.0));
+            .onTrue(new MoveElevatorToPosition(elevator, 20.0));
     }
 
     public Command getAutonomousCommand() {
