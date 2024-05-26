@@ -5,6 +5,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -48,16 +49,6 @@ public class Intake extends SubsystemBase {
     public void runIntake(double voltage) {
         setpointVolts = voltage;
         intakeMotor.setControl(intakeRequest.withOutput(voltage));
-    }
-
-    public void reverseIntake(double voltage) {
-        setpointVolts = -voltage;
-        intakeMotor.setControl(intakeRequest.withOutput(-voltage));
-    }
-
-    public void stopIntake() {
-        setpointVolts = 0;
-        intakeMotor.setControl(intakeRequest.withOutput(0));
     }
 
     @Override
