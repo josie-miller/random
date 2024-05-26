@@ -1,14 +1,50 @@
 package frc.robot;
 
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
+import edu.wpi.first.math.util.Units;
 
 public final class Constants {
+
     public static final class canIDConstants {
         public static final int intakeMotor = 11;
+        public static final int elevatorMotor1 = 12;
+        public static final int elevatorMotor2 = 13;
     }
 
     public static final class intakeConstants {
-        public static final double statorCurrentLimit = 50.0; 
+        public static final double statorCurrentLimit = 40.0;
         public static final InvertedValue intakeInvert = InvertedValue.Clockwise_Positive;
+    }
+
+    public static final class elevatorConstants {
+
+        // copied straight from elevator 
+
+        public static final InvertedValue leftMotorInvert = InvertedValue.Clockwise_Positive; 
+        public static final double gearRatio = 17;
+        public static final double wheelCircumferenceMeters = Units.inchesToMeters(5.51873699838);
+        public static final double minHeightMeters = 0.0;
+        public static final double maxHeightMeters = 0.45;
+
+        public static final double minHeightInRotations = 0;
+        public static final double maxHeightInRotations = 0.0;
+        // Current Limit
+        public static final double statorCurrentLimit = 80;
+
+        // PID Values
+        public static final double kP = 8.413;
+        public static final double kD = 0.0030141;
+        public static final double kS = 0.058684;
+        public static final double kV = 0.0044;
+        public static final double kG = 0.0662029;
+
+        // MotionMagic Values
+        public static final double CruiseVelocityUp = 75;
+        public static final double AccelerationUp = 150;
+        public static final double Jerk = 10000;
+
+        public static final double CruiseVelocityDown = 10;
+        public static final double AccelerationDown = 20;
     }
 }

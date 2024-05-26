@@ -1,7 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.intake.Intake;
 
 public class RunIntake extends Command {
     private final Intake intake;
@@ -24,7 +24,7 @@ public class RunIntake extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        intake.runIntake(0);
+        intake.runIntake(0.0);
     }
 
     @Override
