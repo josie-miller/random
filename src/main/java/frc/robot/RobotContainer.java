@@ -1,12 +1,7 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.commands.RunIntake;
@@ -15,24 +10,21 @@ import frc.robot.commands.MoveElevatorToPosition;
 public class RobotContainer {
     private final Intake intake = new Intake();
     private final Elevator elevator = new Elevator();
-    private final XboxController operatorController = new XboxController(1);
+    public static final CommandXboxController operatorController = new CommandXboxController(0);
 
     public RobotContainer() {
         configureButtonBindings();
     }
 
     private void configureButtonBindings() {
-        new Trigger(() -> operatorController.getAButton())
+        operatorController.a()
             .whileTrue(new RunIntake(intake, 4.0));
 
-        new Trigger(() -> operatorController.getBButton())
+        operatorController.b()
             .whileTrue(new RunIntake(intake, -4.0));
 
-        new Trigger(() -> operatorController.getXButton())
-            .onTrue(new MoveElevatorToPosition(elevator, 10.0));
-
-        new Trigger(() -> operatorController.getYButton())
-            .onTrue(new MoveElevatorToPosition(elevator, 20.0));
+        operatorController.x()
+            .onTrue(new MoveElevatorToPosition(elevator, 0.1));
     }
 
     public Command getAutonomousCommand() {

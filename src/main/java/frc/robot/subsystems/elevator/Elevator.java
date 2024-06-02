@@ -81,7 +81,7 @@ public class Elevator extends SubsystemBase {
 
     public boolean atSetpoint() {
         double currentPosMeters = Conversions.rotationsToMeters(position1.getValue(), Constants.elevatorConstants.wheelCircumferenceMeters, Constants.elevatorConstants.gearRatio);
-        return Math.abs(currentPosMeters - setpointMeters) < Constants.elevatorConstants.Jerk; // we don't tolerate fr
+        return Math.abs(currentPosMeters - setpointMeters) < Constants.elevatorConstants.ToleranceMeters; 
     }
 
     public void enable() {
