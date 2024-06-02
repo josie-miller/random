@@ -85,8 +85,13 @@ public class Elevator extends SubsystemBase {
     }
 
     public void enable() {
+        leftMotor.clearStickyFaults();
+        rightMotor.clearStickyFaults();
+        zeroSensor();
     }
 
     public void disable() {
+        leftMotor.set(0);
+        rightMotor.set(0);
     }
 }
