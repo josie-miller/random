@@ -84,14 +84,8 @@ public class Elevator extends SubsystemBase {
         return Math.abs(currentPosMeters - setpointMeters) < Constants.elevatorConstants.ToleranceMeters; 
     }
 
-    public void enable() {
-        leftMotor.clearStickyFaults();
-        rightMotor.clearStickyFaults();
-        zeroSensor();
-    }
-
     public void disable() {
-        leftMotor.set(0);
-        rightMotor.set(0);
+        leftMotor.setVoltage(0);
+        rightMotor.setVoltage(0);
     }
 }

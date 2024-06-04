@@ -10,14 +10,13 @@ public class MoveElevatorToPosition extends InstantCommand {
     public MoveElevatorToPosition(Elevator elevator, double targetPosition) {
         super();
         this.elevator = elevator;
-        this.targetPosition = targetPosition;
+        this.targetPosition = -targetPosition; // idk why but it is what it is
         addRequirements(elevator);
     }
 
     @Override
     public void initialize() {
         elevator.setSetpoint(targetPosition);
-        elevator.enable();
     }
 
     @Override

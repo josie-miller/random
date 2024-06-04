@@ -9,6 +9,7 @@ public final class Constants {
         public static final int intakeMotor = 15;
         public static final int elevatorMotor1 = 13;
         public static final int elevatorMotor2 = 14;
+        public static final int handoffMotor = 16;
     }
 
     public static final class intakeConstants {
@@ -48,5 +49,9 @@ public final class Constants {
 
         public static final double ToleranceMeters = 0.01;
 
+    }
+    public static final class handoffConstants {
+        public static final InvertedValue handoffInvert = InvertedValue.Clockwise_Positive;
+        public static final double statorCurrentLimit = 70.0;
     }
 }
