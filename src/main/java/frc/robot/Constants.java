@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.util.Units;
+import java.lang.Math;
 
 public final class Constants {
 
@@ -10,6 +11,9 @@ public final class Constants {
         public static final int elevatorMotor1 = 13;
         public static final int elevatorMotor2 = 14;
         public static final int handoffMotor = 16;
+        public static final int leftShooterMotor = 17;
+        public static final int rightShooterMotor = 18;
+
     }
 
     public static final class intakeConstants {
@@ -53,5 +57,20 @@ public final class Constants {
     public static final class handoffConstants {
         public static final InvertedValue handoffInvert = InvertedValue.Clockwise_Positive;
         public static final double statorCurrentLimit = 70.0;
+    }
+    public static final class shooterConstants {
+        public static double wheelCircumferenceMeters = Units.inchesToMeters(4) * Math.PI;
+   
+        public static final InvertedValue leftShooterInvert = InvertedValue.Clockwise_Positive;
+
+    
+        public static final double statorCurrentLimit = 0.0;
+
+   
+        public static final double kP = 0.068419;
+        public static final double kD = 0.0;
+        public static final double kS = 0.16488;
+        public static final double kV = 0.11167;
+        public static final double kA = 0.0077173;
     }
 }

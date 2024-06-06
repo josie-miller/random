@@ -18,6 +18,7 @@ public class Handoff extends SubsystemBase{
     private final StatusSignal<Double> RPS;
     private double setpointVolts;
 
+
     public Handoff(){
         handoffMotor = new TalonFX(Constants.canIDConstants.handoffMotor, "canivore");
         handoffRequest = new VoltageOut(0).withEnableFOC(true);
@@ -48,6 +49,10 @@ public class Handoff extends SubsystemBase{
     public void runHandoff(double voltage){
         setpointVolts = voltage;
         handoffMotor.setControl(handoffRequest.withOutput(voltage));
+    }
+
+    public Double getStatorCurrent(){
+        return current.getValue();
     }
 
     @Override

@@ -10,7 +10,7 @@ public class MoveElevatorToPosition extends InstantCommand {
     public MoveElevatorToPosition(Elevator elevator, double targetPosition) {
         super();
         this.elevator = elevator;
-        this.targetPosition = -targetPosition; // idk why but it is what it is
+        this.targetPosition = targetPosition; // idk why but it is what it is
         addRequirements(elevator);
     }
 
