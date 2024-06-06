@@ -84,8 +84,8 @@ public class Shooter extends SubsystemBase{
     public void runShooter(double velocity, double ratio) {
         leftsetpointMPS = velocity;
         rightsetpointMPS = velocity * ratio;
-        leftMotor.setControl(leftRequestVelocity.withVelocity(Conversions.MPStoRPS(velocity, Constants.shooterConstants.wheelCircumferenceMeters, 1.0)));
-
+        leftMotor.setControl(leftRequestVelocity.withVelocity(Conversions.MPStoRPS(leftsetpointMPS, Constants.shooterConstants.wheelCircumferenceMeters, 1.0)));
+        rightMotor.setControl(rightRequestVelocity.withVelocity(Conversions.MPStoRPS(rightsetpointMPS, Constants.shooterConstants.wheelCircumferenceMeters, 1.0)));
     }
 
     public void setVoltage(double voltage) {
