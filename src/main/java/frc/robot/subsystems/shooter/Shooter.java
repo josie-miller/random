@@ -9,6 +9,7 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Conversions;
@@ -20,8 +21,6 @@ public class Shooter extends SubsystemBase{
     private final StatusSignal<Double> temp1;
     private final StatusSignal<Double> RPS1;
     private final StatusSignal<Double> position1;
-    private double leftsetpointMPS;
-    private double rightsetpointMPS;
 
     private VoltageOut shootRequestVoltage = new VoltageOut(0).withEnableFOC(true);
     private VelocityVoltage leftRequestVelocity = new VelocityVoltage(0).withEnableFOC(true);
@@ -76,23 +75,22 @@ public class Shooter extends SubsystemBase{
         leftMotor.optimizeBusUtilization();
         rightMotor.optimizeBusUtilization();
 
-        leftsetpointMPS = 0;
-        rightsetpointMPS = 0;
-
     }
 
-    public void runShooter(double velocity, double ratio) {
-        leftsetpointMPS = velocity;
-        rightsetpointMPS = velocity * ratio;
-        leftMotor.setControl(leftRequestVelocity.withVelocity(Conversions.MPStoRPS(leftsetpointMPS, Constants.shooterConstants.wheelCircumferenceMeters, 1.0)));
-        rightMotor.setControl(rightRequestVelocity.withVelocity(Conversions.MPStoRPS(rightsetpointMPS, Constants.shooterConstants.wheelCircumferenceMeters, 1.0)));
+    public void setVelocity(double velocity, double ratio) {
+        leftMotor.setControl(leftRequestVelocity.withVelocity(Conversions.MPStoRPS(velocity, Constants.shooterConstants.wheelCircumferenceMeters, 1.0)));
+        rightMotor.setControl(rightRequestVelocity.withVelocity(Conversions.MPStoRPS(velocity * ratio, Constants.shooterConstants.wheelCircumferenceMeters, 1.0)));
     }
 
     public void setVoltage(double voltage) {
         rightMotor.setControl(new Follower(leftMotor.getDeviceID(), true));
         leftMotor.setControl(shootRequestVoltage.withOutput(voltage));
-        
     }
-
-    
+    @Override
+    public void periodic() {
+        BaseStatusSignal.refreshAll(current1, temp1, RPS1);
+        SmartDashboard.putNumber("Shooter Current", current1.getValue());
+        SmartDashboard.putNumber("Shooter Temperature", temp1.getValue());
+        SmartDashboard.putNumber("Shooter Speed (RPS)", RPS1.getValue());
+    }
 }

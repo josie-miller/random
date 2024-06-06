@@ -9,7 +9,6 @@ import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunShooter;
 import frc.robot.commands.ElevatorOuttakeSequence;
-import frc.robot.commands.MoveElevatorToPosition;
 import frc.robot.commands.RunHandoff;
 
 public class RobotContainer {
@@ -31,9 +30,9 @@ public class RobotContainer {
             .onTrue(new ElevatorOuttakeSequence(elevator, intake));
 
         operatorController.y() 
-            .whileTrue(new RunShooter(shooter,20,0.7)); 
+            .whileTrue(new RunShooter(shooter,20,0.5, 0.7)); 
         operatorController.b()  
-            .whileTrue(new RunHandoff(handoff, 5));
+            .whileTrue(new RunHandoff(handoff, 3));
     }
 
     public Command getAutonomousCommand() {
