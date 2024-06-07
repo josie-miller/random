@@ -124,6 +124,7 @@ public final class Constants {
         public static final double AMPShortTime = 0.2;
         public static final double floorDegrees = 138;
         public static final double otbVoltage = 4;
+        public static final double restingDegrees = 21;
 
     }
 }

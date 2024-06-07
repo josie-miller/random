@@ -4,25 +4,20 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.Intake;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.subsystems.handoff.Handoff;
-import frc.robot.subsystems.otb_intake.otbIntake;
 
 public class RunIntake extends Command {
     private final Intake intake;
     private final double voltage;
     private final Handoff handoff;
-    private final otbIntake otbIntake;
     private double stateStartTime = 0;
 
 
-    public RunIntake(Intake intake, Handoff handoff, otbIntake otbIntake, double voltage) {
+    public RunIntake(Intake intake, Handoff handoff, double voltage) {
         this.intake = intake;
         this.handoff = handoff;
-        this.otbIntake = otbIntake;
         this.voltage = voltage;
         addRequirements(intake);
-        addRequirements(handoff);
-        addRequirements(otbIntake);
-    }
+        addRequirements(handoff);    }
 
     @Override
     public void initialize() {

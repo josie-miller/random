@@ -29,15 +29,13 @@ public class RobotContainer {
             .onTrue(new IntakeSequence(otbIntake, intake, handoff));
 
         operatorController.x()
-            .onTrue(new ElevatorOuttakeSequence(elevator, intake));
-//mid shoot
+            .onTrue(new ElevatorOuttakeSequence(elevator, intake, otbIntake));
+//mid shoot speaker
         operatorController.y() 
             .onTrue(new ShootSequence(intake, handoff, shooter, Constants.commandConstants.midShootTime, Constants.commandConstants.midShootRatio, Constants.commandConstants.handoffIntakeVoltage, Constants.commandConstants.handoffShooterVoltage, Constants.commandConstants.shootMidVelocity, Constants.commandConstants.midShortTime)); 
-//amp shoot
+//shoot amp
         operatorController.b()  
             .onTrue(new AMPShoot(intake, handoff, shooter));
-            //left shoot
-            //.onTrue(new ShootSequence(intake, handoff, shooter, Constants.commandConstants.leftShootTime, Constants.commandConstants.leftShootRatio, Constants.commandConstants.handoffIntakeVoltage, Constants.commandConstants.handoffShooterVoltage, Constants.commandConstants.shootLeftVelocity, Constants.commandConstants.leftShortTime)); 
     }
 
     public Command getAutonomousCommand() {
