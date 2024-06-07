@@ -49,6 +49,11 @@ public class Intake extends SubsystemBase {
         intakeMotor.setControl(intakeRequest.withOutput(voltage));
     }
 
+    
+    public Double getStatorCurrent(){
+        return current.getValue();
+    }
+
     @Override
     public void periodic() {
         BaseStatusSignal.refreshAll(current, temp, RPS);

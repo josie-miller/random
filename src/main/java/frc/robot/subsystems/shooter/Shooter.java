@@ -88,7 +88,7 @@ public class Shooter extends SubsystemBase{
 
     }
 
-    public void setVelocity(double voltage) {
+    public void setVoltage(double voltage) {
         rightMotor.setControl(new Follower(leftMotor.getDeviceID(), true));
         leftMotor.setControl(shootRequestVoltage.withOutput(voltage));
         

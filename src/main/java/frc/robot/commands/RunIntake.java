@@ -36,6 +36,6 @@ public class RunIntake extends Command {
 
     @Override
     public boolean isFinished() {
-        return handoff.getStatorCurrent() > 5 && (RobotController.getFPGATime() / 1.0E6 - stateStartTime > 0.25);
+        return intake.getStatorCurrent() > 35 && (RobotController.getFPGATime() / 1.0E6 - stateStartTime > 0.25);
     }
 }
