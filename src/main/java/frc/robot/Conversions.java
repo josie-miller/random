@@ -27,4 +27,11 @@ public class Conversions {
         double wheelMPS = (RPS * circumference)/gearRatio;
         return wheelMPS;
     }
+    public static double RotationsToDegrees(double RPM, double gearRatio){
+        return RPM * (360.0 / (gearRatio));
+    }
+    
+    public static double DegreesToRotations(double degrees, double gearRatio){
+        return degrees / (360.0 / (gearRatio));
+    }
 }

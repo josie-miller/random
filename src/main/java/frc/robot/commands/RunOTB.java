@@ -2,32 +2,31 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.Intake;
-import edu.wpi.first.wpilibj.RobotController;
-import frc.robot.subsystems.handoff.Handoff;
 import frc.robot.subsystems.otb_intake.otbIntake;
+import edu.wpi.first.wpilibj.RobotController;
 
-public class RunIntake extends Command {
+
+public class RunOTB extends Command {
+    private final otbIntake otbIntake;
     private final Intake intake;
     private final double voltage;
-    private final Handoff handoff;
-    private final otbIntake otbIntake;
+    private final double angleDegrees;
     private double stateStartTime = 0;
 
 
-    public RunIntake(Intake intake, Handoff handoff, otbIntake otbIntake, double voltage) {
-        this.intake = intake;
-        this.handoff = handoff;
+    public RunOTB(otbIntake otbIntake, Intake intake, double voltage, double angleDegrees) {
         this.otbIntake = otbIntake;
+        this.intake = intake;
         this.voltage = voltage;
-        addRequirements(intake);
-        addRequirements(handoff);
+        this.angleDegrees = angleDegrees;
         addRequirements(otbIntake);
+        addRequirements(intake);
     }
 
     @Override
     public void initialize() {
         stateStartTime = RobotController.getFPGATime() / 1.0E6; 
-        intake.runIntake(voltage);
+        otbIntake.requestIntake(angleDegrees,voltage);
     }
 
     @Override
@@ -36,11 +35,11 @@ public class RunIntake extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        intake.runIntake(0.0);
+        otbIntake.requestIntakeVoltage(0.0);
     }
 
     @Override
     public boolean isFinished() {
-        return handoff.getStatorCurrent() > 5 && (RobotController.getFPGATime() / 1.0E6 - stateStartTime > 0.25);
+        return intake.getStatorCurrent() > 40 && (RobotController.getFPGATime() / 1.0E6 - stateStartTime > 0.25);
     }
 }
