@@ -14,6 +14,8 @@ import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.AMPShoot;
 import frc.robot.commands.ElevatorOuttakeSequence;
 import frc.robot.commands.IntakeSequence;
+import frc.robot.commands.RunHandoff;
+import frc.robot.commands.SetPivot2;
 
 public class RobotContainer {
     private final Intake intake = new Intake();
@@ -22,8 +24,7 @@ public class RobotContainer {
     private final Shooter shooter = new Shooter();
     private final otbIntake otbIntake = new otbIntake();
     private final Swerve swerve = new Swerve();
-    private static final CommandXboxController movementController = new CommandXboxController(0);
-    public static final CommandXboxController operatorController = new CommandXboxController(1);
+    public static final CommandXboxController operatorController = new CommandXboxController(0);
 
     public RobotContainer() {
     swerve.zeroWheels();
@@ -31,9 +32,9 @@ public class RobotContainer {
     swerve.setDefaultCommand(
             new TeleopSwerve(
                 swerve, 
-                () -> -movementController.getRawAxis(XboxController.Axis.kLeftY.value),
-                () -> -movementController.getRawAxis(XboxController.Axis.kLeftX.value), 
-                () -> -movementController.getRawAxis(XboxController.Axis.kRightX.value)
+                () -> -operatorController.getRawAxis(XboxController.Axis.kLeftY.value),
+                () -> -operatorController.getRawAxis(XboxController.Axis.kLeftX.value), 
+                () -> -operatorController.getRawAxis(XboxController.Axis.kRightX.value)
               
             )
         );
@@ -52,7 +53,7 @@ public class RobotContainer {
             .onTrue(new ShootSequence(intake, handoff, shooter, Constants.commandConstants.midShootTime, Constants.commandConstants.midShootRatio, Constants.commandConstants.handoffIntakeVoltage, Constants.commandConstants.handoffShooterVoltage, Constants.commandConstants.shootMidVelocity, Constants.commandConstants.midShortTime)); 
 //shoot amp
         operatorController.b()  
-            .onTrue(new AMPShoot(intake, handoff, shooter));
+            .onTrue(new SetPivot2(otbIntake, 0));
     }
 
     public Command getAutonomousCommand() {

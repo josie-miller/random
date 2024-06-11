@@ -41,6 +41,6 @@ public class RunOTB extends Command {
 
     @Override
     public boolean isFinished() {
-        return intake.getStatorCurrent() > 40 && (RobotController.getFPGATime() / 1.0E6 - stateStartTime > 0.25);
+        return intake.getStatorCurrent() > 38 && (RobotController.getFPGATime() / 1.0E6 - stateStartTime > 0.25);
     }
 }
