@@ -34,4 +34,7 @@ public class Conversions {
     public static double DegreesToRotations(double degrees, double gearRatio){
         return degrees / (360.0 / (gearRatio));
     }
+    public static double RotationsToMeters(double Rotations, double circumference, double gearRatio){
+        return Rotations * (circumference / (gearRatio));
+    }
 }

@@ -62,6 +62,11 @@ public final class Constants {
         public static final double anglekS = 0.0;
         public static final double anglekV = 0.0;
 
+        public static final double steerkP = 8.0;
+        public static final double steerkD = 0.0;
+        public static final double steerkS = 0.0;
+        public static final double steerkV = 0.0;
+
         /* Wheel Circumference */
         public static final double wheelCircumferenceMeters = Units.inchesToMeters(4) * Math.PI;
 
@@ -77,6 +82,10 @@ public final class Constants {
         public static final Translation2d FR = new Translation2d(wheelBase / 2.0, -trackWidth / 2.0);
         public static final Translation2d BL = new Translation2d(-wheelBase / 2.0, trackWidth / 2.0);
         public static final Translation2d BR = new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0);
+
+        /* Extra */
+
+        public static final double velocityToVoltageScaler = 7.0;
 
     }
 

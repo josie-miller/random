@@ -4,13 +4,15 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
-public class SwerveGyro {
+import edu.wpi.first.math.util.Units;
+
+public class GyroIOPigeon implements GyroIO {
     Pigeon2 pigeon;
     private final StatusSignal<Double> positionDegRaw;
     private final StatusSignal<Double> pitchDeg;
     private final StatusSignal<Double> rollDeg;
 
-    public SwerveGyro(int pigeonID){
+    public GyroIOPigeon(int pigeonID){
         pigeon = new Pigeon2(pigeonID, "canivore");
         positionDegRaw = pigeon.getYaw();
         pitchDeg = pigeon.getPitch();
@@ -27,6 +29,25 @@ public class SwerveGyro {
         pigeon.optimizeBusUtilization();
     }
 
+    @Override
+    public void updateInputs(GyroIOInputs inputs) {
+        BaseStatusSignal.refreshAll(
+            positionDegRaw,
+            pitchDeg,
+            rollDeg
+        );
+        inputs.connected = true;
+        inputs.positionDegRaw = positionDegRaw.getValue();
+        inputs.positionRad = Units.degreesToRadians(positionDegRaw.getValue());
+        inputs.velocityRadPerSec = 0.0;
+        inputs.pitchDeg = pitchDeg.getValue();
+        inputs.rollDeg = rollDeg.getValue();
+        inputs.pitchRad = Units.degreesToRadians(pitchDeg.getValue());
+        inputs.rollRad = Units.degreesToRadians(rollDeg.getValue());
+    }
+
+
+    @Override
     public void reset() {
         pigeon.setYaw(0.0);
     }
