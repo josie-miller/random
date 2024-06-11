@@ -9,7 +9,6 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 
-
 public class Handoff extends SubsystemBase{
     private final TalonFX handoffMotor;
     private VoltageOut handoffRequest;
@@ -17,7 +16,6 @@ public class Handoff extends SubsystemBase{
     private final StatusSignal<Double> temp;
     private final StatusSignal<Double> RPS;
     private double setpointVolts;
-
 
     public Handoff(){
         handoffMotor = new TalonFX(Constants.canIDConstants.handoffMotor, "canivore");

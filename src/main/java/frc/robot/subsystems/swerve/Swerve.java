@@ -36,9 +36,6 @@ public class Swerve extends SubsystemBase{
             new ModuleIOInputs(),
             new ModuleIOInputs()
     };
-    private Pose2d poseRaw = new Pose2d();
-    private Rotation2d lastGyroYaw = new Rotation2d();
-    private final boolean fieldRelatve;
     private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(swerveConstants.FL, swerveConstants.FR, swerveConstants.BL,
         swerveConstants.BR);
     private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(kinematics, getRotation2d(),
@@ -49,7 +46,6 @@ public class Swerve extends SubsystemBase{
             0,
             new Rotation2d()));
 
-    private double[] lastModulePositionsMeters = new double[] { 0.0, 0.0, 0.0, 0.0 };
     private final SysIdRoutine driveRoutine = new SysIdRoutine(new SysIdRoutine.Config(
         null, 
         Volts.of(3), 
@@ -90,8 +86,6 @@ public class Swerve extends SubsystemBase{
 
         moduleIOs[3] = new ModuleIOTalonFX(canIDConstants.driveMotor[3], canIDConstants.steerMotor[3], canIDConstants.CANcoder[3], swerveConstants.CANcoderOffsets[3],
         swerveConstants.driveMotorInverts[3], swerveConstants.steerMotorInverts[3], swerveConstants.CANcoderInverts[3]);
-   
-        this.fieldRelatve = true;
 
     }
 
@@ -154,9 +148,8 @@ public class Swerve extends SubsystemBase{
     }
 
     public void updateOdometry(){
-        var gyroYaw = new Rotation2d(gyroInputs.positionRad);
-        lastGyroYaw = gyroYaw;
-        poseRaw = odometry.update(
+        new Rotation2d(gyroInputs.positionRad);
+        odometry.update(
                 getRotation2d(),
                 getSwerveModulePositions());
     }
@@ -167,7 +160,6 @@ public class Swerve extends SubsystemBase{
 
     public void resetPose(Pose2d pose){
         odometry.resetPosition(getRotation2d(), getSwerveModulePositions(), pose);
-        poseRaw = pose;
     }
 
     public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds){
