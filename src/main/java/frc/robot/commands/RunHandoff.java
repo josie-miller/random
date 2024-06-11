@@ -19,6 +19,7 @@ public class RunHandoff extends Command {
 
     @Override
     public void initialize() {
+        stateStartTime = RobotController.getFPGATime() / 1.0E6;
         handoff.runHandoff(voltage);
     }
 

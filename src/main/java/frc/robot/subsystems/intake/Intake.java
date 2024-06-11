@@ -41,7 +41,7 @@ public class Intake extends SubsystemBase {
 
         intakeMotor.optimizeBusUtilization();
 
-        setpointVolts = 0;
+        setpointVolts = 0.0;
     }
 
     public void runIntake(double voltage) {
