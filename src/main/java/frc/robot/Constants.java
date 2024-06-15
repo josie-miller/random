@@ -9,6 +9,8 @@ import java.lang.Math;
 
 public final class Constants {
 
+    public static final boolean tuningMode = true;
+
     public static final class canIDConstants {
 
         public static final int pigeon = 0;
