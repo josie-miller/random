@@ -9,12 +9,11 @@ public class RunIntake extends Command {
     private final double voltage;
     private double stateStartTime = 0;
 
-
     public RunIntake(Intake intake, double voltage) {
         this.intake = intake;
         this.voltage = voltage;
         addRequirements(intake);
-      }
+    }
 
     @Override
     public void initialize() {

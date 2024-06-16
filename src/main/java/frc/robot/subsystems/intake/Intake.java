@@ -1,66 +1,27 @@
 package frc.robot.subsystems.intake;
 
-import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.TalonFX;
-import frc.robot.Constants;
-import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Intake implements IntakeIO {
-    private final TalonFX intakeMotor;
-    private VoltageOut intakeRequest;
-    private final StatusSignal<Double> current;
-    private final StatusSignal<Double> temp;
-    private final StatusSignal<Double> RPS;
+public class Intake extends SubsystemBase {
+    private final IntakeIO intakeIO;
     private double setpointVolts;
 
-    public Intake() {
-        intakeMotor = new TalonFX(Constants.canIDConstants.intakeMotor, "canivore");
-        intakeRequest = new VoltageOut(0).withEnableFOC(true);
-        current = intakeMotor.getStatorCurrent();
-        temp = intakeMotor.getDeviceTemp();
-        RPS = intakeMotor.getRotorVelocity();
-
-        var intakeConfigs = new TalonFXConfiguration();
-        var intakeCurrentLimitConfigs = intakeConfigs.CurrentLimits;
-        intakeCurrentLimitConfigs.StatorCurrentLimit = Constants.intakeConstants.statorCurrentLimit;
-        intakeCurrentLimitConfigs.StatorCurrentLimitEnable = true;
-        intakeConfigs.MotorOutput.Inverted = Constants.intakeConstants.intakeInvert;
-
-        intakeMotor.getConfigurator().apply(intakeConfigs);
-
-        BaseStatusSignal.setUpdateFrequencyForAll(
-            50,
-            current,
-            temp,
-            RPS
-        );
-
-        intakeMotor.optimizeBusUtilization();
-
+    public Intake(IntakeIO intakeIO) {
+        this.intakeIO = intakeIO;
         setpointVolts = 0.0;
     }
 
     public void runIntake(double voltage) {
         setpointVolts = voltage;
-        intakeMotor.setControl(intakeRequest.withOutput(voltage));
+        intakeIO.setOutput(voltage);
     }
 
-    
     public Double getStatorCurrent(){
-        return current.getValue();
+        return intakeIO.getStatorCurrent();
     }
-    public void updateInputs(IntakeIOInputs inputs) {
-        BaseStatusSignal.refreshAll(
-            current,
-            temp,
-            RPS
-        );
-        inputs.appliedVolts = intakeRequest.Output;
+
+    public void updateInputs(IntakeIO.IntakeIOInputs inputs) {
+        intakeIO.updateInputs(inputs);
         inputs.setpointVolts = this.setpointVolts;
-        inputs.current = current.getValue();
-        inputs.tempF = temp.getValue();
-        inputs.intakeRPS = RPS.getValue();
     }
 }
