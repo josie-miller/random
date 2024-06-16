@@ -53,7 +53,7 @@ public class RobotContainer {
             .onTrue(new ShootSequence(intake, handoff, shooter, Constants.commandConstants.midShootTime, Constants.commandConstants.midShootRatio, Constants.commandConstants.handoffIntakeVoltage, Constants.commandConstants.handoffShooterVoltage, Constants.commandConstants.shootMidVelocity, Constants.commandConstants.midShortTime)); 
 //shoot amp
         operatorController.b()  
-            .onTrue(new SetPivot2(otbIntake, 0));
+            .onTrue(new AMPShoot(intake, handoff, shooter));
     }
 
     public Command getAutonomousCommand() {

@@ -3,13 +3,11 @@ package frc.robot.subsystems.intake;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.Constants;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 
-public class Intake extends SubsystemBase {
+public class Intake implements IntakeIO {
     private final TalonFX intakeMotor;
     private VoltageOut intakeRequest;
     private final StatusSignal<Double> current;
@@ -53,13 +51,16 @@ public class Intake extends SubsystemBase {
     public Double getStatorCurrent(){
         return current.getValue();
     }
-
-    @Override
-    public void periodic() {
-        BaseStatusSignal.refreshAll(current, temp, RPS);
-        SmartDashboard.putNumber("Intake Voltage", setpointVolts);
-        SmartDashboard.putNumber("Intake Current", current.getValue());
-        SmartDashboard.putNumber("Intake Temperature", temp.getValue());
-        SmartDashboard.putNumber("Intake Speed (RPS)", RPS.getValue());
+    public void updateInputs(IntakeIOInputs inputs) {
+        BaseStatusSignal.refreshAll(
+            current,
+            temp,
+            RPS
+        );
+        inputs.appliedVolts = intakeRequest.Output;
+        inputs.setpointVolts = this.setpointVolts;
+        inputs.current = current.getValue();
+        inputs.tempF = temp.getValue();
+        inputs.intakeRPS = RPS.getValue();
     }
 }
