@@ -1,12 +1,16 @@
 package frc.robot.subsystems.elevator;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Conversions;
+import frc.robot.subsystems.elevator.ElevatorIOInputsAutoLogged;
 import frc.robot.Constants;
 
 public class Elevator extends SubsystemBase {
     private final ElevatorIO elevatorIO;
+    private ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
     private double setpointMeters;
 
     public Elevator(ElevatorIO elevatorIO) {
@@ -19,14 +23,9 @@ public class Elevator extends SubsystemBase {
         elevatorIO.setMotionMagicSetpoint(setpointRotations);
     }
 
-    @Override
-    public void periodic() {
-        ElevatorIO.ElevatorIOInputs inputs = new ElevatorIO.ElevatorIOInputs();
+    public void Loop() {
         elevatorIO.updateInputs(inputs);
-        SmartDashboard.putNumber("Elevator Position", inputs.position);
-        SmartDashboard.putNumber("Elevator Current", inputs.current);
-        SmartDashboard.putNumber("Elevator Temperature", inputs.temperature);
-        SmartDashboard.putNumber("Elevator Speed (RPS)", inputs.RPS);
+        Logger.processInputs("Elevator", inputs);
     }
 
     public void zeroSensor() {
@@ -40,5 +39,8 @@ public class Elevator extends SubsystemBase {
 
     public void disable() {
         elevatorIO.disableMotors();
+    }
+    public void updateInputs(ElevatorIO.ElevatorIOInputs inputs) {
+        elevatorIO.updateInputs(inputs);
     }
 }

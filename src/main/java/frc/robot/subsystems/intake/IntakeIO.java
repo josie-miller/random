@@ -2,6 +2,8 @@ package frc.robot.subsystems.intake;
 
 import org.littletonrobotics.junction.AutoLog;
 
+import edu.wpi.first.wpilibj2.command.Command;
+
 public interface IntakeIO {
     @AutoLog
     public static class IntakeIOInputs {
@@ -14,7 +16,5 @@ public interface IntakeIO {
 
     public void updateInputs(IntakeIOInputs inputs);
 
-    public void setOutput(double volts);
-
-    public Double getStatorCurrent();
+    public Command setOutput(double volts);
 }

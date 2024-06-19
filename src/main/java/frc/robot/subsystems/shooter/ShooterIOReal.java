@@ -17,7 +17,6 @@ public class ShooterIOReal implements ShooterIO {
     private final StatusSignal<Double> current1;
     private final StatusSignal<Double> temp1;
     private final StatusSignal<Double> RPS1;
-    private final StatusSignal<Double> position1;
 
     private VoltageOut shootRequestVoltage;
     private VelocityVoltage leftRequestVelocity;
@@ -29,7 +28,6 @@ public class ShooterIOReal implements ShooterIO {
         current1 = leftMotor.getStatorCurrent();
         temp1 = leftMotor.getDeviceTemp();
         RPS1 = leftMotor.getRotorVelocity();
-        position1 = leftMotor.getPosition();
 
         shootRequestVoltage = new VoltageOut(0).withEnableFOC(true);
         leftRequestVelocity = new VelocityVoltage(0).withEnableFOC(true);
@@ -64,8 +62,7 @@ public class ShooterIOReal implements ShooterIO {
             50,
             current1,
             temp1,
-            RPS1,
-            position1
+            RPS1
         );
 
         leftMotor.optimizeBusUtilization();

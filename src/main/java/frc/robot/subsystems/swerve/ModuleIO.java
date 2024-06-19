@@ -1,8 +1,11 @@
 package frc.robot.subsystems.swerve;
 
+import org.littletonrobotics.junction.AutoLog;
+
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public interface ModuleIO {
+    @AutoLog
     public static class ModuleIOInputs {
         public double driveVelocityMetersPerSec = 0.0;
         public double driveAppliedVolts = 0.0;

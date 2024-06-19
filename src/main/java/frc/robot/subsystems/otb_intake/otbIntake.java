@@ -1,16 +1,22 @@
 package frc.robot.subsystems.otb_intake;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Conversions;
 import frc.robot.Constants;
 
 public class OtbIntake extends SubsystemBase {
     private final OtbIntakeIO intakeIO;
-    private double pivotMotorSetpoint;
+    private OtbIntakeIOInputsAutoLogged inputs = new OtbIntakeIOInputsAutoLogged();
 
     public OtbIntake(OtbIntakeIO intakeIO) {
         this.intakeIO = intakeIO;
+    }
+    
+    public void Loop(){
+        intakeIO.updateInputs(inputs);
+        Logger.processInputs("OTB_Intake", inputs);
     }
 
     public void requestPivotVoltage(double voltage) {
@@ -18,7 +24,6 @@ public class OtbIntake extends SubsystemBase {
     }
 
     public void requestSetpoint(double angleDegrees) {
-        pivotMotorSetpoint = angleDegrees;
         double pivotSetpointRotations = Conversions.DegreesToRotations(angleDegrees, Constants.otbIntakeConstants.gearRatio);
         intakeIO.setPivotPosition(pivotSetpointRotations);
     }
@@ -36,15 +41,11 @@ public class OtbIntake extends SubsystemBase {
         intakeIO.zeroPosition();
     }
 
-    @Override
-    public void periodic() {
-        OtbIntakeIO.OtbIntakeIOInputs inputs = new OtbIntakeIO.OtbIntakeIOInputs();
-        intakeIO.updateInputs(inputs);
-        SmartDashboard.putNumber("Intake Current", inputs.intakeCurrent);
-        SmartDashboard.putNumber("Intake Temperature", inputs.intakeTemp);
-        SmartDashboard.putNumber("Intake Speed (RPS)", inputs.intakeRPS);
-        SmartDashboard.putNumber("Pivot Current", inputs.pivotCurrent);
-        SmartDashboard.putNumber("Pivot Temperature", inputs.pivotTemp);
-        SmartDashboard.putNumber("Pivot Speed (RPS)", inputs.pivotRPS);
+    public double getStatorCurrent(){
+        return inputs.intakeCurrent;
+    }
+
+    public double getPivotStatorCurrent(){
+        return inputs.pivotCurrent;
     }
 }

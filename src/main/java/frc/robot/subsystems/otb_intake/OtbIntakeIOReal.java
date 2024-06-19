@@ -93,7 +93,10 @@ public class OtbIntakeIOReal implements OtbIntakeIO {
                 pivotCurrent,
                 pivotPos,
                 pivotRPS,
-                pivotTemp
+                pivotTemp,
+                intakeCurrent,
+                intakeTemp,
+                intakeRPS
                );
 
         intakeMotor.optimizeBusUtilization();
@@ -119,7 +122,6 @@ public class OtbIntakeIOReal implements OtbIntakeIO {
         pivotMotor.setPosition(0);
     }
 
-    @Override
     public void updateInputs(OtbIntakeIOInputs inputs) {
         BaseStatusSignal.refreshAll(
                 pivotCurrent,

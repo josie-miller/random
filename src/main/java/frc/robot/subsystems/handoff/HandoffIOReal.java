@@ -13,6 +13,7 @@ public class HandoffIOReal implements HandoffIO {
     private final StatusSignal<Double> current;
     private final StatusSignal<Double> temp;
     private final StatusSignal<Double> RPS;
+    private double setpointVolts;
 
     public HandoffIOReal() {
         handoffMotor = new TalonFX(Constants.canIDConstants.handoffMotor, "canivore");
@@ -20,6 +21,7 @@ public class HandoffIOReal implements HandoffIO {
         current = handoffMotor.getStatorCurrent();
         temp = handoffMotor.getDeviceTemp();
         RPS = handoffMotor.getRotorVelocity();
+        setpointVolts = 0.0;
         
         var handoffConfigs = new TalonFXConfiguration();
         var handoffCurrentLimitConfigs = handoffConfigs.CurrentLimits;
@@ -40,13 +42,15 @@ public class HandoffIOReal implements HandoffIO {
     }
 
     @Override
-    public void setOutput(double volts) {
-        handoffMotor.setControl(handoffRequest.withOutput(volts));
+    public void setVoltage(double volts) {
+        setpointVolts = volts;
+        handoffMotor.setControl(handoffRequest.withOutput(setpointVolts));
     }
 
     @Override
     public void updateInputs(HandoffIOInputs inputs) {
         BaseStatusSignal.refreshAll(current, temp, RPS);
+        inputs.appliedVolts = handoffRequest.Output;
         inputs.current = current.getValue();
         inputs.temp = temp.getValue();
         inputs.RPS = RPS.getValue();

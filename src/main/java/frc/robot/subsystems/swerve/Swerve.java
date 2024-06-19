@@ -28,7 +28,7 @@ import frc.robot.subsystems.swerve.ModuleIO.ModuleIOInputs;
 
 public class Swerve extends SubsystemBase{
     private final GyroIO gyroIO = new GyroIOPigeon(canIDConstants.pigeon);
-    private final GyroIOInputs gyroInputs = new GyroIOInputs();
+    private GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
     public final ModuleIO[] moduleIOs = new ModuleIO[4];
     private final ModuleIOInputs[] moduleInputs = {
             new ModuleIOInputs(),
