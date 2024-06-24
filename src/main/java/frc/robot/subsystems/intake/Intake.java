@@ -18,7 +18,7 @@ public class Intake extends SubsystemBase {
         setpointVolts = 0.0;
     }
 
-    public void Loop(){
+    public void periodic(){
         intakeIO.updateInputs(inputs);
         Logger.processInputs("Intake", inputs);
     }

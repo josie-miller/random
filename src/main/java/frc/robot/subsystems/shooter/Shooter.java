@@ -14,7 +14,7 @@ public class Shooter extends SubsystemBase {
         this.shooterIO = shooterIO;
     }
 
-    public void Loop(){
+    public void periodic(){
         shooterIO.updateInputs(inputs);
         Logger.processInputs("Shooter", inputs);
     }

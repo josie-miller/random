@@ -8,20 +8,20 @@ import frc.robot.Conversions;
 import frc.robot.Constants;
 
 public class OtbIntake extends SubsystemBase {
-    private final OtbIntakeIO intakeIO;
+    private final OtbIntakeIO otbintakeIO;
     private OtbIntakeIOInputsAutoLogged inputs = new OtbIntakeIOInputsAutoLogged();
 
-    public OtbIntake(OtbIntakeIO intakeIO) {
-        this.intakeIO = intakeIO;
+    public OtbIntake(OtbIntakeIO otbintakeIO) {
+        this.otbintakeIO = otbintakeIO;
     }
     
-    public void Loop(){
-        intakeIO.updateInputs(inputs);
+    public void periodic(){
+        otbintakeIO.updateInputs(inputs);
         Logger.processInputs("OTB_Intake", inputs);
     }
 
     public void requestPivotVoltage(double voltage) {
-        intakeIO.setPivotVoltage(voltage);
+        otbintakeIO.setPivotVoltage(voltage);
     }
 /* 
     public void requestSetpoint(double angleDegrees) {
@@ -30,16 +30,15 @@ public class OtbIntake extends SubsystemBase {
     }*/
 
     public Command setPivot(double angleDegrees) {
-        return this.runOnce(() -> intakeIO.setPivotPosition(Conversions.DegreesToRotations(angleDegrees, Constants.otbIntakeConstants.gearRatio)));
+        return this.runOnce(() -> otbintakeIO.setPivotPosition(Conversions.DegreesToRotations(angleDegrees, Constants.otbIntakeConstants.gearRatio)));
     }
 
     public Command setPivot() {
-        return this.runOnce(() -> intakeIO.setPivotPosition(Conversions.DegreesToRotations(Constants.commandConstants.restingDegrees, Constants.otbIntakeConstants.gearRatio)));
+        return this.runOnce(() -> otbintakeIO.setPivotPosition(Conversions.DegreesToRotations(Constants.commandConstants.restingDegrees, Constants.otbIntakeConstants.gearRatio)));
     }
 
-    public Command requestOTB(double angleDegrees, double voltage) {
-        return setPivot(angleDegrees)
-        .alongWith(this.run(() -> intakeIO.setIntakeVoltage(voltage)));
+    public Command requestOTB(double voltage) {
+        return this.run(() -> otbintakeIO.setIntakeVoltage(voltage));
     }
 /*
     public void requestIntakeVoltage(double voltage) {
@@ -52,7 +51,7 @@ public class OtbIntake extends SubsystemBase {
     }*/
 
     public Command zeroOTB(){
-        return this.runOnce(() -> intakeIO.setPivotPosition(Conversions.DegreesToRotations(0, Constants.otbIntakeConstants.gearRatio)));
+        return this.runOnce(() -> otbintakeIO.setPivotPosition(Conversions.DegreesToRotations(0, Constants.otbIntakeConstants.gearRatio)));
     }
 
     public double getStatorCurrent(){
