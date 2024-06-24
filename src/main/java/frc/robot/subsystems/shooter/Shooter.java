@@ -2,7 +2,7 @@ package frc.robot.subsystems.shooter;
 
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
@@ -19,12 +19,16 @@ public class Shooter extends SubsystemBase {
         Logger.processInputs("Shooter", inputs);
     }
 
-    public void setVelocity(double velocity, double ratio) {
-        shooterIO.setVelocity(velocity, ratio);
+    public Command setVelocity(double velocity, double ratio) {
+        return this.run(() -> shooterIO.setVelocity(velocity, ratio));
     }
 
-    public void setVoltage(double voltage) {
-        shooterIO.setVoltage(voltage);
+    public Command setVelocity(double velocity, double ratio, double time) {
+        return this.run(() -> shooterIO.setVelocity(velocity, ratio))
+        .withTimeout(time)
+        .andThen(this.runOnce(() -> shooterIO.setVoltage(0)));
     }
-
+    public Command setVoltage(double voltage) {
+        return this.run(() -> shooterIO.setVoltage(voltage));
+    }
 }

@@ -2,7 +2,9 @@ package frc.robot.subsystems.handoff;
 
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Handoff extends SubsystemBase {
@@ -18,10 +20,16 @@ public class Handoff extends SubsystemBase {
         handoffIO.updateInputs(inputs);
         Logger.processInputs("Intake", inputs);
     }
-
-    public void runHandoff(double voltage) {
+    public Command runHandoff(double voltage) {
         setpointVolts = voltage;
-        handoffIO.setVoltage(voltage);
+        return this.run(() -> handoffIO.setVoltage(setpointVolts));
+    }
+
+    public Command runHandoff(double voltage, double time) {
+        return this.run(() -> handoffIO.setVoltage(voltage))
+        .withTimeout(time)
+        .andThen(this.runOnce(() -> handoffIO.setVoltage(0)));
+
     }
 
     public double getStatorCurrent(){

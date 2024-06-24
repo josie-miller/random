@@ -5,6 +5,7 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import frc.robot.Constants;
+
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -30,6 +31,7 @@ public class ElevatorIOReal implements ElevatorIO {
         leftMotorConfigs.CurrentLimits.StatorCurrentLimit = Constants.elevatorConstants.statorCurrentLimit;
         leftMotorConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
         leftMotorConfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+
         leftMotorConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.elevatorConstants.CruiseVelocityUp;
         leftMotorConfigs.MotionMagic.MotionMagicAcceleration = Constants.elevatorConstants.AccelerationUp;
         leftMotorConfigs.Slot0.kP = Constants.elevatorConstants.kP;

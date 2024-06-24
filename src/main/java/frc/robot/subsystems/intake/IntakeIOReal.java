@@ -3,9 +3,6 @@ package frc.robot.subsystems.intake;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -17,7 +14,6 @@ public class IntakeIOReal implements IntakeIO {
     private final StatusSignal<Double> current;
     private final StatusSignal<Double> temp;
     private final StatusSignal<Double> RPS;
-    private double setpointVolts;
 
     public IntakeIOReal() {
         intakeMotor = new TalonFX(Constants.canIDConstants.intakeMotor, "canivore");
@@ -25,7 +21,6 @@ public class IntakeIOReal implements IntakeIO {
         current = intakeMotor.getStatorCurrent();
         temp = intakeMotor.getDeviceTemp();
         RPS = intakeMotor.getRotorVelocity();
-        setpointVolts = 0.0;
 
         var intakeConfigs = new TalonFXConfiguration();
         var intakeCurrentLimitConfigs = intakeConfigs.CurrentLimits;
@@ -46,8 +41,8 @@ public class IntakeIOReal implements IntakeIO {
     }
 
     @Override
-    public Command setOutput(double volts) {
-        return new RunCommand(() -> setOutput(volts));
+    public void setOutput(double volts) {
+        intakeMotor.setControl(intakeRequest.withOutput(volts));
     }
 
     @Override

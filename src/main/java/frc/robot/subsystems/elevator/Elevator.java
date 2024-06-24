@@ -2,10 +2,9 @@ package frc.robot.subsystems.elevator;
 
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Conversions;
-import frc.robot.subsystems.elevator.ElevatorIOInputsAutoLogged;
 import frc.robot.Constants;
 
 public class Elevator extends SubsystemBase {
@@ -16,11 +15,17 @@ public class Elevator extends SubsystemBase {
     public Elevator(ElevatorIO elevatorIO) {
         this.elevatorIO = elevatorIO;
     }
-
+/* 
     public void setSetpoint(double setpointMeters) {
         this.setpointMeters = setpointMeters;
         double setpointRotations = Conversions.metersToRotations(setpointMeters, Constants.elevatorConstants.wheelCircumferenceMeters, Constants.elevatorConstants.gearRatio);
         elevatorIO.setMotionMagicSetpoint(setpointRotations);
+    }*/
+
+    public Command setElevatorSetpoint(double setpointMeters) {
+        this.setpointMeters = setpointMeters;
+        double setpointRotations = Conversions.metersToRotations(setpointMeters, Constants.elevatorConstants.wheelCircumferenceMeters, Constants.elevatorConstants.gearRatio);
+        return this.runOnce(() -> elevatorIO.setMotionMagicSetpoint(setpointRotations));
     }
 
     public void Loop() {

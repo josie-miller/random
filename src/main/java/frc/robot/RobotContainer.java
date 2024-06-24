@@ -16,7 +16,6 @@ import frc.robot.subsystems.shooter.ShooterIOReal;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.commands.ShootSequence;
 import frc.robot.commands.TeleopSwerve;
-import frc.robot.commands.AMPShoot;
 import frc.robot.commands.ElevatorOuttakeSequence;
 import frc.robot.commands.IntakeSequence;
 
@@ -57,8 +56,8 @@ public class RobotContainer {
             .onTrue(new ShootSequence(intake, handoff, shooter, Constants.commandConstants.midShootTime, Constants.commandConstants.midShootRatio, Constants.commandConstants.handoffIntakeVoltage, Constants.commandConstants.handoffShooterVoltage, Constants.commandConstants.shootMidVelocity, Constants.commandConstants.midShortTime)); 
 //shoot amp
         operatorController.b()  
-            .onTrue(new AMPShoot(intake, handoff, shooter));
-    }
+            .onTrue(new ShootSequence(intake, handoff, shooter, Constants.commandConstants.AMPShootTime, Constants.commandConstants.AMPShootRatio, Constants.commandConstants.handoffIntakeVoltage, Constants.commandConstants.handoffShooterVoltage, Constants.commandConstants.AMPShooterVelocity, Constants.commandConstants.AMPShortTime));
+    } 
 
     public Command getAutonomousCommand() {
         return null;

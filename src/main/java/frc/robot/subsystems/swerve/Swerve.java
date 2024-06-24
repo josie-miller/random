@@ -30,11 +30,11 @@ public class Swerve extends SubsystemBase{
     private final GyroIO gyroIO = new GyroIOPigeon(canIDConstants.pigeon);
     private GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
     public final ModuleIO[] moduleIOs = new ModuleIO[4];
-    private final ModuleIOInputs[] moduleInputs = {
-            new ModuleIOInputs(),
-            new ModuleIOInputs(),
-            new ModuleIOInputs(),
-            new ModuleIOInputs()
+    private final ModuleIOInputsAutoLogged[] moduleInputs = {
+            new ModuleIOInputsAutoLogged(),
+            new ModuleIOInputsAutoLogged(),
+            new ModuleIOInputsAutoLogged(),
+            new ModuleIOInputsAutoLogged()
     };
     private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(swerveConstants.FL, swerveConstants.FR, swerveConstants.BL,
         swerveConstants.BR);
