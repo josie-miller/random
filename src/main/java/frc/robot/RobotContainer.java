@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.handoff.Handoff;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.otb_intake.otbIntake;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.swerve.Swerve;
@@ -16,9 +17,10 @@ import frc.robot.commands.ElevatorOuttakeSequence;
 import frc.robot.commands.IntakeSequence;
 import frc.robot.commands.RunHandoff;
 import frc.robot.commands.SetPivot2;
+import frc.robot.subsystems.intake.IntakeIOReal;
 
 public class RobotContainer {
-    private final Intake intake = new Intake();
+    private final Intake intake = new Intake(new IntakeIOReal());
     private final Elevator elevator = new Elevator();
     private final Handoff handoff = new Handoff();
     private final Shooter shooter = new Shooter();
