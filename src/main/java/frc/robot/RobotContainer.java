@@ -50,10 +50,10 @@ public class RobotContainer {
             .onTrue(new ElevatorOuttakeSequence(elevator, intake, otbIntake));
 //mid shoot speaker
         operatorController.y() 
-            .onTrue(new ShootSequence(intake, handoff, shooter, Constants.commandConstants.midShootTime, Constants.commandConstants.midShootRatio, Constants.commandConstants.handoffIntakeVoltage, Constants.commandConstants.handoffShooterVoltage, Constants.commandConstants.shootMidVelocity, Constants.commandConstants.midShortTime)); 
+            .onTrue(new AMPShoot(intake, handoff, shooter)); 
 //shoot amp
         operatorController.b()  
-            .onTrue(new SetPivot2(otbIntake, 0));
+            .onTrue(new ShootSequence(intake, handoff, shooter, Constants.commandConstants.midShootTime, Constants.commandConstants.midShootRatio, Constants.commandConstants.handoffIntakeVoltage, Constants.commandConstants.handoffShooterVoltage, Constants.commandConstants.shootMidVelocity, Constants.commandConstants.midShortTime));
     }
 
     public Command getAutonomousCommand() {
