@@ -50,7 +50,7 @@ public class Intake extends SubsystemBase {
     }
 
     
-    public Double getStatorCurrent(){
+    public double getStatorCurrent(){
         return current.getValue();
     }
 

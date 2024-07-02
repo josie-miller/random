@@ -49,7 +49,7 @@ public class Handoff extends SubsystemBase{
         handoffMotor.setControl(handoffRequest.withOutput(voltage));
     }
 
-    public Double getStatorCurrent(){
+    public double getStatorCurrent(){
         return current.getValue();
     }
 
