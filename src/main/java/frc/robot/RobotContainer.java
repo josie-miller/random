@@ -46,7 +46,7 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         operatorController.a()
-            .onTrue(new IntakeSequence(otbIntake, intake, handoff));
+            .whileTrue(new RunCommand(() -> intake.runIntake(Constants.commandConstants.intakeVoltage)));
 
         operatorController.x()
             .onTrue(new ElevatorOuttakeSequence(elevator, intake, otbIntake));
