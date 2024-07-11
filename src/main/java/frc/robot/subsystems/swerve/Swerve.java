@@ -3,8 +3,18 @@ package frc.robot.subsystems.swerve;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.SignalLogger;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.PathPlannerLogging;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -13,6 +23,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,22 +33,22 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.canIDConstants;
 import frc.robot.Constants.swerveConstants;
-import frc.robot.subsystems.swerve.GyroIO.GyroIOInputs;
-import frc.robot.subsystems.swerve.ModuleIO.ModuleIOInputs;
 
 
 public class Swerve extends SubsystemBase{
-    private final GyroIO gyroIO = new GyroIOPigeon(canIDConstants.pigeon);
-    private final GyroIOInputs gyroInputs = new GyroIOInputs();
+    private final GyroIO gyroIO;
+    private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
     public final ModuleIO[] moduleIOs = new ModuleIO[4];
-    private final ModuleIOInputs[] moduleInputs = {
-            new ModuleIOInputs(),
-            new ModuleIOInputs(),
-            new ModuleIOInputs(),
-            new ModuleIOInputs()
+    private final ModuleIOInputsAutoLogged[] moduleInputs = {
+            new ModuleIOInputsAutoLogged(),
+            new ModuleIOInputsAutoLogged(),
+            new ModuleIOInputsAutoLogged(),
+            new ModuleIOInputsAutoLogged()
     };
-    private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(swerveConstants.FL, swerveConstants.FR, swerveConstants.BL,
-        swerveConstants.BR);
+    private Pose2d poseRaw = new Pose2d();
+    private Rotation2d lastGyroYaw = new Rotation2d();
+    private final boolean fieldRelatve;
+    private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(swerveConstants.FL, swerveConstants.FR, swerveConstants.BL, swerveConstants.BR);
     private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(kinematics, getRotation2d(),
         getSwerveModulePositions()); 
     SwerveModuleState setpointModuleStates[] = kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -46,6 +57,7 @@ public class Swerve extends SubsystemBase{
             0,
             new Rotation2d()));
 
+    private double[] lastModulePositionsMeters = new double[] { 0.0, 0.0, 0.0, 0.0 };
     private final SysIdRoutine driveRoutine = new SysIdRoutine(new SysIdRoutine.Config(
         null, 
         Volts.of(3), 
@@ -57,38 +69,57 @@ public class Swerve extends SubsystemBase{
              this)
     );
 
-    private final SysIdRoutine steerRoutine = new SysIdRoutine(
-        new SysIdRoutine.Config(
-            null, 
-            Volts.of(5), 
-            Seconds.of(6), 
-            (state) -> SignalLogger.writeString("state", state.toString())
-        ),
-        new SysIdRoutine.Mechanism(
-            (Measure<Voltage> volts) -> moduleIOs[0].steerVoltage(volts.in(Volts)),
-            null, 
-            this
-        )
-    );
-    
-    
+    private final SysIdRoutine steerRoutine = new SysIdRoutine(new SysIdRoutine.Config(
+        null, 
+        Volts.of(5), 
+        Seconds.of(6), 
+        (state) -> SignalLogger.writeString("state", state.toString())), 
+        new SysIdRoutine.Mechanism((
+            Measure<Voltage> volts) -> moduleIOs[0].steerVoltage(volts.in(Volts)),
+             null, 
+             this)
+        );
 
     public Swerve() {
 
-        moduleIOs[0] = new ModuleIOTalonFX(canIDConstants.driveMotor[0], canIDConstants.steerMotor[0], canIDConstants.CANcoder[0],swerveConstants.CANcoderOffsets[0],
+        gyroIO = new GyroIOReal(canIDConstants.pigeon);
+
+        moduleIOs[0] = new ModuleIOReal(canIDConstants.driveMotor[0], canIDConstants.steerMotor[0], canIDConstants.CANcoder[0],swerveConstants.CANcoderOffsets[0],
         swerveConstants.driveMotorInverts[0], swerveConstants.steerMotorInverts[0], swerveConstants.CANcoderInverts[0]);
 
-        moduleIOs[1] = new ModuleIOTalonFX(canIDConstants.driveMotor[1], canIDConstants.steerMotor[1], canIDConstants.CANcoder[1], swerveConstants.CANcoderOffsets[1],
+        moduleIOs[1] = new ModuleIOReal(canIDConstants.driveMotor[1], canIDConstants.steerMotor[1], canIDConstants.CANcoder[1], swerveConstants.CANcoderOffsets[1],
        swerveConstants.driveMotorInverts[1], swerveConstants.steerMotorInverts[1], swerveConstants.CANcoderInverts[1]);
 
-        moduleIOs[2] = new ModuleIOTalonFX(canIDConstants.driveMotor[2], canIDConstants.steerMotor[2], canIDConstants.CANcoder[2], swerveConstants.CANcoderOffsets[2],
+        moduleIOs[2] = new ModuleIOReal(canIDConstants.driveMotor[2], canIDConstants.steerMotor[2], canIDConstants.CANcoder[2], swerveConstants.CANcoderOffsets[2],
         swerveConstants.driveMotorInverts[2], swerveConstants.steerMotorInverts[2], swerveConstants.CANcoderInverts[2]);
 
-        moduleIOs[3] = new ModuleIOTalonFX(canIDConstants.driveMotor[3], canIDConstants.steerMotor[3], canIDConstants.CANcoder[3], swerveConstants.CANcoderOffsets[3],
+        moduleIOs[3] = new ModuleIOReal(canIDConstants.driveMotor[3], canIDConstants.steerMotor[3], canIDConstants.CANcoder[3], swerveConstants.CANcoderOffsets[3],
         swerveConstants.driveMotorInverts[3], swerveConstants.steerMotorInverts[3], swerveConstants.CANcoderInverts[3]);
 
-    }
+        for (int i = 0; i < 4; i++) {
+            moduleIOs[i].setDriveBrakeMode(true);
+            moduleIOs[i].setTurnBrakeMode(false);
+        }
+        this.fieldRelatve = true;
+      }
 
+
+    @Override
+    public void periodic(){
+        gyroIO.updateInputs(gyroInputs);
+        Logger.processInputs("Swerve/Gyro", gyroInputs);
+        for (int i = 0; i < 4; i++){
+            moduleIOs[i].updateInputs(moduleInputs[i]);
+            Logger.processInputs("Swerve/Module/ModuleNum[" + i + "]", moduleInputs[i]);
+        }
+        
+        updateOdometry();
+        logModuleStates("SwerveModuleStates/setpointStates", getSetpointStates());
+        //logModuleStates("SwerveModuleStates/optimizedSetpointStates", getOptimizedSetPointStates());
+        logModuleStates("SwerveModuleStates/MeasuredStates", getMeasuredStates());
+        Logger.recordOutput("Odometry/PoseRaw", poseRaw);
+
+    }
 
     public void requestDesiredState(double x_speed, double y_speed, double rot_speed, boolean fieldRelative, boolean isOpenLoop){
 
@@ -104,7 +135,7 @@ public class Swerve extends SubsystemBase{
                 y_speed,
                 rot_speed,
                 gyroPosition));
-            SwerveDriveKinematics.desaturateWheelSpeeds(setpointModuleStates, 12);
+            kinematics.desaturateWheelSpeeds(setpointModuleStates, 12);
             for (int i = 0; i < 4; i++) {
                 setpointModuleStates[i] =  SwerveModuleState.optimize(desiredModuleStates[i], steerPositions[i]);
                 moduleIOs[i].setDesiredState(setpointModuleStates[i], true);
@@ -116,7 +147,7 @@ public class Swerve extends SubsystemBase{
                 y_speed,
                 rot_speed,
                 gyroPosition));
-            SwerveDriveKinematics.desaturateWheelSpeeds(setpointModuleStates, swerveConstants.maxSpeed);
+            kinematics.desaturateWheelSpeeds(setpointModuleStates, swerveConstants.maxSpeed);
             for (int i = 0; i < 4; i++) {
                 setpointModuleStates[i] =  SwerveModuleState.optimize(desiredModuleStates[i], steerPositions[i]);
                 moduleIOs[i].setDesiredState(setpointModuleStates[i], false);
@@ -128,7 +159,7 @@ public class Swerve extends SubsystemBase{
                 y_speed,
                 rot_speed
                 ));
-            SwerveDriveKinematics.desaturateWheelSpeeds(setpointModuleStates, swerveConstants.maxSpeed);
+            kinematics.desaturateWheelSpeeds(setpointModuleStates, swerveConstants.maxSpeed);
             for (int i = 0; i < 4; i++) {
                 setpointModuleStates[i] =  SwerveModuleState.optimize(desiredModuleStates[i], steerPositions[i]);
                 moduleIOs[i].setDesiredState(setpointModuleStates[i], false);
@@ -148,8 +179,9 @@ public class Swerve extends SubsystemBase{
     }
 
     public void updateOdometry(){
-        new Rotation2d(gyroInputs.positionRad);
-        odometry.update(
+        var gyroYaw = new Rotation2d(gyroInputs.positionRad);
+        lastGyroYaw = gyroYaw;
+        poseRaw = odometry.update(
                 getRotation2d(),
                 getSwerveModulePositions());
     }
@@ -160,6 +192,7 @@ public class Swerve extends SubsystemBase{
 
     public void resetPose(Pose2d pose){
         odometry.resetPosition(getRotation2d(), getSwerveModulePositions(), pose);
+        poseRaw = pose;
     }
 
     public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds){
@@ -274,6 +307,15 @@ public class Swerve extends SubsystemBase{
 
     public void setGyroStartingPosition(double yawDegrees){
         gyroIO.setPosition(yawDegrees);
+    }
+
+    private void logModuleStates(String key, SwerveModuleState[] states) {
+        List<Double> dataArray = new ArrayList<Double>();
+        for (int i = 0; i < 4; i++) {
+            dataArray.add(states[i].angle.getRadians());
+            dataArray.add(states[i].speedMetersPerSecond);
+        }
+        Logger.recordOutput(key, dataArray.stream().mapToDouble(Double::doubleValue).toArray());
     }
 
  

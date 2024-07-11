@@ -6,13 +6,13 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.math.util.Units;
 
-public class GyroIOPigeon implements GyroIO {
+public class GyroIOReal implements GyroIO {
     Pigeon2 pigeon;
     private final StatusSignal<Double> positionDegRaw;
     private final StatusSignal<Double> pitchDeg;
     private final StatusSignal<Double> rollDeg;
 
-    public GyroIOPigeon(int pigeonID){
+    public GyroIOReal(int pigeonID){
         pigeon = new Pigeon2(pigeonID, "canivore");
         positionDegRaw = pigeon.getYaw();
         pitchDeg = pigeon.getPitch();

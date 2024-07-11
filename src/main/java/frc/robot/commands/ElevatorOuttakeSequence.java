@@ -5,11 +5,11 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.otb_intake.otbIntake;
+import frc.robot.subsystems.otb_intake.OtbIntake;
 import frc.robot.Constants;
 
 public class ElevatorOuttakeSequence extends ParallelCommandGroup {
-    public ElevatorOuttakeSequence(Elevator elevator, Intake intake, otbIntake otbIntake) {
+    public ElevatorOuttakeSequence(Elevator elevator, Intake intake, OtbIntake otbIntake) {
         addCommands(
             new SetPivot(otbIntake),
             new SequentialCommandGroup(
