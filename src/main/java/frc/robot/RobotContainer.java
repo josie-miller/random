@@ -21,6 +21,8 @@ import frc.robot.commands.sequences.ElevatorOuttakeSequence;
 import frc.robot.commands.sequences.IntakeSequence;
 import frc.robot.commands.sequences.ShootSequence;
 
+import frc.robot.constants.commandConstants;
+
 public class RobotContainer {
     private final Intake intake = new Intake(new IntakeIOReal());
     private final Handoff handoff = new Handoff(new HandoffIOReal());
@@ -54,10 +56,10 @@ public class RobotContainer {
             .onTrue(new ElevatorOuttakeSequence(elevator, intake, otbIntake));
 
         operatorController.y() //AMP Shoot
-            .onTrue(new ShootSequence(intake, handoff, shooter, Constants.commandConstants.AMPShootTime, Constants.commandConstants.AMPShootRatio, Constants.commandConstants.handoffIntakeVoltage, Constants.commandConstants.handoffShooterVoltage, Constants.commandConstants.AMPShooterVelocity, Constants.commandConstants.AMPShortTime));
+            .onTrue(new ShootSequence(intake, handoff, shooter, commandConstants.AMPShootTime, commandConstants.AMPShootRatio, commandConstants.handoffIntakeVoltage, commandConstants.handoffShooterVoltage, commandConstants.AMPShooterVelocity, commandConstants.AMPShortTime));
 
         operatorController.b() //Speaker Mid Shoot
-            .onTrue(new ShootSequence(intake, handoff, shooter, Constants.commandConstants.midShootTime, Constants.commandConstants.midShootRatio, Constants.commandConstants.handoffIntakeVoltage, Constants.commandConstants.handoffShooterVoltage, Constants.commandConstants.shootMidVelocity, Constants.commandConstants.midShortTime));
+            .onTrue(new ShootSequence(intake, handoff, shooter, commandConstants.midShootTime, commandConstants.midShootRatio, commandConstants.handoffIntakeVoltage, commandConstants.handoffShooterVoltage, commandConstants.shootMidVelocity, commandConstants.midShortTime));
     }
 
     public Command getAutonomousCommand() {

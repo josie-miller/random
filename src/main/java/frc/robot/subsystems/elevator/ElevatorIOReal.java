@@ -5,21 +5,23 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
-import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
-import frc.robot.Constants;
-import frc.robot.Conversions;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 
+import frc.commons.Conversions;
+import frc.robot.constants.canIDConstants;
+import frc.robot.constants.elevatorConstants;
+
 public class ElevatorIOReal implements ElevatorIO {
-    private final TalonFX leftMotor = new TalonFX(Constants.canIDConstants.elevatorMotor1, "canivore");
-    private final TalonFX rightMotor = new TalonFX(Constants.canIDConstants.elevatorMotor2, "canivore");
+    private final TalonFX leftMotor = new TalonFX(canIDConstants.leftElevatorMotor, "canivore");
+    private final TalonFX rightMotor = new TalonFX(canIDConstants.rightElevatorMotor, "canivore");
+    private final TalonFXConfiguration leftMotorConfigs = new TalonFXConfiguration();
 
     private MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0).withEnableFOC(true); 
     private VoltageOut voltageOutRequest =  new VoltageOut(0).withEnableFOC(true);
+
     private final StatusSignal<Double> current1 = leftMotor.getStatorCurrent();
     private final StatusSignal<Double> current2 = rightMotor.getStatorCurrent();
     private final StatusSignal<Double> temp1 = leftMotor.getDeviceTemp();
@@ -29,21 +31,20 @@ public class ElevatorIOReal implements ElevatorIO {
     private double setpointMeters;
 
     public ElevatorIOReal() {
-        var leftMotorConfigs = new TalonFXConfiguration();
-        leftMotorConfigs.CurrentLimits.StatorCurrentLimit = Constants.elevatorConstants.statorCurrentLimit;
+        leftMotorConfigs.CurrentLimits.StatorCurrentLimit = elevatorConstants.statorCurrentLimit;
         leftMotorConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
         leftMotorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
-        leftMotorConfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive; // changed this
-        leftMotorConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.elevatorConstants.CruiseVelocityUp;
-        leftMotorConfigs.MotionMagic.MotionMagicAcceleration = Constants.elevatorConstants.AccelerationUp;
-        leftMotorConfigs.MotionMagic.MotionMagicJerk = Constants.elevatorConstants.Jerk;
+        leftMotorConfigs.MotorOutput.Inverted = elevatorConstants.leftMotorInvert;
+        leftMotorConfigs.MotionMagic.MotionMagicCruiseVelocity = elevatorConstants.CruiseVelocityUp;
+        leftMotorConfigs.MotionMagic.MotionMagicAcceleration = elevatorConstants.AccelerationUp;
+        leftMotorConfigs.MotionMagic.MotionMagicJerk = elevatorConstants.Jerk;
 
-        leftMotorConfigs.Slot0.kP = Constants.elevatorConstants.kP;
-        leftMotorConfigs.Slot0.kD = Constants.elevatorConstants.kD;
-        leftMotorConfigs.Slot0.kS = Constants.elevatorConstants.kS;
-        leftMotorConfigs.Slot0.kV = Constants.elevatorConstants.kV;
-        leftMotorConfigs.Slot0.kG = Constants.elevatorConstants.kG;
+        leftMotorConfigs.Slot0.kP = elevatorConstants.kP;
+        leftMotorConfigs.Slot0.kD = elevatorConstants.kD;
+        leftMotorConfigs.Slot0.kS = elevatorConstants.kS;
+        leftMotorConfigs.Slot0.kV = elevatorConstants.kV;
+        leftMotorConfigs.Slot0.kG = elevatorConstants.kG;
         leftMotorConfigs.Slot0.GravityType = GravityTypeValue.Elevator_Static;
 
         rightMotor.setControl(new Follower(leftMotor.getDeviceID(), true));
@@ -68,7 +69,7 @@ public class ElevatorIOReal implements ElevatorIO {
 
     public void setMotionMagicSetpoint(double setpointMeters) {
         this.setpointMeters = setpointMeters;
-        leftMotor.setControl(motionMagicRequest.withPosition(Conversions.metersToRotations(setpointMeters, Constants.elevatorConstants.wheelCircumferenceMeters, Constants.elevatorConstants.gearRatio)));
+        leftMotor.setControl(motionMagicRequest.withPosition(Conversions.metersToRotations(setpointMeters, elevatorConstants.wheelCircumferenceMeters, elevatorConstants.gearRatio)));
     }
 
     public void runElevator(double voltage) {
@@ -86,8 +87,8 @@ public class ElevatorIOReal implements ElevatorIO {
         );
 
         inputs.setpointMeters = setpointMeters;
-        inputs.elevatorVelMPS = Conversions.RPStoMPS(RPS1.getValue(), Constants.elevatorConstants.wheelCircumferenceMeters, Constants.elevatorConstants.gearRatio);
-        inputs.elevatorHeightMeters = Conversions.RotationsToMeters(position1.getValue(), Constants.elevatorConstants.wheelCircumferenceMeters, Constants.elevatorConstants.gearRatio);
+        inputs.elevatorVelMPS = Conversions.RPStoMPS(RPS1.getValue(), elevatorConstants.wheelCircumferenceMeters, elevatorConstants.gearRatio);
+        inputs.elevatorHeightMeters = Conversions.RotationsToMeters(position1.getValue(), elevatorConstants.wheelCircumferenceMeters, elevatorConstants.gearRatio);
         inputs.currentAmps = new double[] {current1.getValue(), current2.getValue()};
         inputs.tempF = new double[] {temp1.getValue(), temp2.getValue()};
     }

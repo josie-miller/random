@@ -1,8 +1,8 @@
 package frc.robot.commands.singles;
 
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.shooter.Shooter;
-import edu.wpi.first.wpilibj.RobotController;
 
 public class RunShooter extends Command {
     private final Shooter shooter;

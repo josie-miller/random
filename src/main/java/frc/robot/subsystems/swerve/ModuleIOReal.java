@@ -17,9 +17,8 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-
-import frc.robot.Conversions;
-import frc.robot.Constants.swerveConstants;
+import frc.commons.Conversions;
+import frc.robot.constants.swerveConstants;
 
 public class ModuleIOReal implements ModuleIO {
     private final TalonFX driveMotor;

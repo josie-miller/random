@@ -1,6 +1,6 @@
 package frc.robot.commands;
 
-import frc.robot.Constants.swerveConstants;
+import frc.robot.constants.swerveConstants;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;

@@ -2,18 +2,19 @@ package frc.robot.subsystems.handoff;
 
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
-
-import frc.robot.Constants.canIDConstants;
-import frc.robot.Constants.handoffConstants;
-
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 
+import frc.robot.constants.canIDConstants;
+import frc.robot.constants.handoffConstants;
+
 public class HandoffIOReal implements HandoffIO {
     private final TalonFX handoff = new TalonFX(canIDConstants.handoffMotor, "canivore");
+    private final TalonFXConfiguration handoffConfigs = new TalonFXConfiguration();
 
     private VoltageOut handoffRequest = new VoltageOut(0).withEnableFOC(true);
+
     private final StatusSignal<Double> current = handoff.getStatorCurrent();
     private final StatusSignal<Double> temp = handoff.getDeviceTemp();
     private final StatusSignal<Double> RPS = handoff.getRotorVelocity();
@@ -21,11 +22,8 @@ public class HandoffIOReal implements HandoffIO {
     private double setpointVolts;
 
     public HandoffIOReal() {
-        var handoffConfigs = new TalonFXConfiguration();
-        var handoffCurrentLimitConfigs = handoffConfigs.CurrentLimits;
-        handoffCurrentLimitConfigs.StatorCurrentLimit = handoffConstants.statorCurrentLimit;
-        handoffCurrentLimitConfigs.StatorCurrentLimitEnable = true;
-
+        handoffConfigs.CurrentLimits.StatorCurrentLimit = handoffConstants.statorCurrentLimit;
+        handoffConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
         handoffConfigs.MotorOutput.Inverted = handoffConstants.handoffInvert;
         
         handoff.getConfigurator().apply(handoffConfigs);

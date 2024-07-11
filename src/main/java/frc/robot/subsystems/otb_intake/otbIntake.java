@@ -1,10 +1,9 @@
 package frc.robot.subsystems.otb_intake;
 
 import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Conversions;
-import frc.robot.Constants;
+import frc.commons.Conversions;
+import frc.robot.constants.otbIntakeConstants;
 
 public class OtbIntake extends SubsystemBase {
     private final OtbIntakeIO otbintakeIO;
@@ -30,7 +29,7 @@ public class OtbIntake extends SubsystemBase {
 
     public void requestSetpoint(double angleDegrees) {
         pivotSetpoint = angleDegrees;
-        double pivotSetpointRotations = Conversions.DegreesToRotations(pivotSetpoint, Constants.otbIntakeConstants.gearRatio);
+        double pivotSetpointRotations = Conversions.DegreesToRotations(pivotSetpoint, otbIntakeConstants.gearRatio);
         otbintakeIO.setPivotPosition(pivotSetpointRotations);
     }
 

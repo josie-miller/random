@@ -1,10 +1,9 @@
 package frc.robot.subsystems.elevator;
 
 import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Conversions;
-import frc.robot.Constants;
+import frc.commons.Conversions;
+import frc.robot.constants.elevatorConstants;
 
 public class Elevator extends SubsystemBase {
     private final ElevatorIO elevatorIO;
@@ -17,7 +16,7 @@ public class Elevator extends SubsystemBase {
 
     public void setSetpoint(double setpointMeters) {
         this.setpointMeters = setpointMeters;
-        double setpointRotations = Conversions.metersToRotations(setpointMeters, Constants.elevatorConstants.wheelCircumferenceMeters, Constants.elevatorConstants.gearRatio);
+        double setpointRotations = Conversions.metersToRotations(setpointMeters, elevatorConstants.wheelCircumferenceMeters, elevatorConstants.gearRatio);
         elevatorIO.setMotionMagicSetpoint(setpointRotations);
     }
 
@@ -31,7 +30,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public boolean atSetpoint() {
-        return Math.abs(inputs.elevatorHeightMeters - setpointMeters) < Constants.elevatorConstants.ToleranceMeters;
+        return Math.abs(inputs.elevatorHeightMeters - setpointMeters) < elevatorConstants.ToleranceMeters;
     }
 
     public double getPosition() {

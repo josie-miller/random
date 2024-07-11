@@ -1,13 +1,9 @@
 package frc.robot.subsystems.swerve;
 
-import static edu.wpi.first.units.Units.Seconds;
-import static edu.wpi.first.units.Units.Volts;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.littletonrobotics.junction.Logger;
-
 import com.ctre.phoenix6.SignalLogger;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -24,9 +20,11 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.Constants.canIDConstants;
-import frc.robot.Constants.swerveConstants;
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
 
+import frc.robot.constants.canIDConstants;
+import frc.robot.constants.swerveConstants;
 
 public class Swerve extends SubsystemBase{
     private final GyroIO gyroIO;

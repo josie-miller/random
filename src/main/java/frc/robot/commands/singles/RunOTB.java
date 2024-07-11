@@ -1,9 +1,9 @@
 package frc.robot.commands.singles;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.subsystems.otb_intake.OtbIntake;
 
+import frc.robot.constants.commandConstants;
 
 public class RunOTB extends Command {
     private final OtbIntake otbIntake;
@@ -29,7 +29,7 @@ public class RunOTB extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        otbIntake.requestIntake(Constants.commandConstants.restingDegrees, 0.0);
+        otbIntake.requestIntake(commandConstants.restingDegrees, 0.0);
     }
 
     @Override

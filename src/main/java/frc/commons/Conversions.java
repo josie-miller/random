@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.commons;
 
 public class Conversions {
     public static double metersToRotations(double meters, double wheelCircumference, double gearRatio) {

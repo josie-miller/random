@@ -6,11 +6,13 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 
-import frc.robot.Constants.canIDConstants;
-import frc.robot.Constants.intakeConstants;
+import frc.robot.constants.canIDConstants;
+import frc.robot.constants.intakeConstants;
 
 public class IntakeIOReal implements IntakeIO {
     private final TalonFX intake = new TalonFX(canIDConstants.intakeMotor, "canivore");
+    private final TalonFXConfiguration intakeConfigs = new TalonFXConfiguration();
+
     private VoltageOut intakeRequest = new VoltageOut(0).withEnableFOC(true);
 
     private final StatusSignal<Double> current= intake.getStatorCurrent();
@@ -20,10 +22,8 @@ public class IntakeIOReal implements IntakeIO {
     private double setpointVolts;
 
     public IntakeIOReal() {
-        var intakeConfigs = new TalonFXConfiguration();
-        var intakeCurrentLimitConfigs = intakeConfigs.CurrentLimits;
-        intakeCurrentLimitConfigs.StatorCurrentLimit = intakeConstants.statorCurrentLimit;
-        intakeCurrentLimitConfigs.StatorCurrentLimitEnable = true;
+        intakeConfigs.CurrentLimits.StatorCurrentLimit = intakeConstants.statorCurrentLimit;
+        intakeConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
         intakeConfigs.MotorOutput.Inverted = intakeConstants.intakeInvert;
         
         intake.getConfigurator().apply(intakeConfigs);
