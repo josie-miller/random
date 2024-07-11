@@ -1,22 +1,20 @@
-package frc.robot.commands;
+package frc.robot.commands.singles;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.Intake;
 import edu.wpi.first.wpilibj.RobotController;
 
-public class RunOutake extends Command {
+public class RunIntake extends Command {
     private final Intake intake;
     private final double voltage;
-    private final double duration;
     private double stateStartTime = 0;
 
 
-    public RunOutake(Intake intake, double voltage, double duration) {
+    public RunIntake(Intake intake, double voltage) {
         this.intake = intake;
         this.voltage = voltage;
-        this.duration = duration;
         addRequirements(intake);
-    }
+      }
 
     @Override
     public void initialize() {
@@ -35,6 +33,6 @@ public class RunOutake extends Command {
 
     @Override
     public boolean isFinished() {
-        return (RobotController.getFPGATime() / 1.0E6 - stateStartTime) > duration;
+        return intake.getStatorCurrent() > 38 && (RobotController.getFPGATime() / 1.0E6 - stateStartTime > 0.25);
     }
 }

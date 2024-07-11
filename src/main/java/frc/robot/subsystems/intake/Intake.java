@@ -20,7 +20,7 @@ public class Intake extends SubsystemBase {
 
     public void runIntake(double voltage) {
         setpointVolts = voltage;
-        intakeIO.runIntake(voltage);
+        intakeIO.runIntake(setpointVolts);
     }
 
     /*public Command runIntake(double voltage, double time) {

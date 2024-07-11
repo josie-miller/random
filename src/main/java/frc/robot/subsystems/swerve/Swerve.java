@@ -4,17 +4,11 @@ import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.SignalLogger;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.PathPlannerLogging;
-import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -23,7 +17,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -46,8 +39,6 @@ public class Swerve extends SubsystemBase{
             new ModuleIOInputsAutoLogged()
     };
     private Pose2d poseRaw = new Pose2d();
-    private Rotation2d lastGyroYaw = new Rotation2d();
-    private final boolean fieldRelatve;
     private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(swerveConstants.FL, swerveConstants.FR, swerveConstants.BL, swerveConstants.BR);
     private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(kinematics, getRotation2d(),
         getSwerveModulePositions()); 
@@ -57,7 +48,6 @@ public class Swerve extends SubsystemBase{
             0,
             new Rotation2d()));
 
-    private double[] lastModulePositionsMeters = new double[] { 0.0, 0.0, 0.0, 0.0 };
     private final SysIdRoutine driveRoutine = new SysIdRoutine(new SysIdRoutine.Config(
         null, 
         Volts.of(3), 
@@ -100,7 +90,6 @@ public class Swerve extends SubsystemBase{
             moduleIOs[i].setDriveBrakeMode(true);
             moduleIOs[i].setTurnBrakeMode(false);
         }
-        this.fieldRelatve = true;
       }
 
 
@@ -135,7 +124,7 @@ public class Swerve extends SubsystemBase{
                 y_speed,
                 rot_speed,
                 gyroPosition));
-            kinematics.desaturateWheelSpeeds(setpointModuleStates, 12);
+            SwerveDriveKinematics.desaturateWheelSpeeds(setpointModuleStates, 12);
             for (int i = 0; i < 4; i++) {
                 setpointModuleStates[i] =  SwerveModuleState.optimize(desiredModuleStates[i], steerPositions[i]);
                 moduleIOs[i].setDesiredState(setpointModuleStates[i], true);
@@ -147,7 +136,7 @@ public class Swerve extends SubsystemBase{
                 y_speed,
                 rot_speed,
                 gyroPosition));
-            kinematics.desaturateWheelSpeeds(setpointModuleStates, swerveConstants.maxSpeed);
+            SwerveDriveKinematics.desaturateWheelSpeeds(setpointModuleStates, swerveConstants.maxSpeed);
             for (int i = 0; i < 4; i++) {
                 setpointModuleStates[i] =  SwerveModuleState.optimize(desiredModuleStates[i], steerPositions[i]);
                 moduleIOs[i].setDesiredState(setpointModuleStates[i], false);
@@ -159,7 +148,7 @@ public class Swerve extends SubsystemBase{
                 y_speed,
                 rot_speed
                 ));
-            kinematics.desaturateWheelSpeeds(setpointModuleStates, swerveConstants.maxSpeed);
+            SwerveDriveKinematics.desaturateWheelSpeeds(setpointModuleStates, swerveConstants.maxSpeed);
             for (int i = 0; i < 4; i++) {
                 setpointModuleStates[i] =  SwerveModuleState.optimize(desiredModuleStates[i], steerPositions[i]);
                 moduleIOs[i].setDesiredState(setpointModuleStates[i], false);
@@ -179,8 +168,7 @@ public class Swerve extends SubsystemBase{
     }
 
     public void updateOdometry(){
-        var gyroYaw = new Rotation2d(gyroInputs.positionRad);
-        lastGyroYaw = gyroYaw;
+        new Rotation2d(gyroInputs.positionRad);
         poseRaw = odometry.update(
                 getRotation2d(),
                 getSwerveModulePositions());

@@ -2,7 +2,6 @@ package frc.robot.subsystems.handoff;
 
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
 
 import frc.robot.Constants.canIDConstants;
 import frc.robot.Constants.handoffConstants;

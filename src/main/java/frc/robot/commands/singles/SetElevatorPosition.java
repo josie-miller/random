@@ -1,13 +1,13 @@
-package frc.robot.commands;
+package frc.robot.commands.singles;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.elevator.Elevator;
 
-public class MoveElevatorToPosition extends InstantCommand {
+public class SetElevatorPosition extends InstantCommand {
     private final Elevator elevator;
     private final double targetPosition;
 
-    public MoveElevatorToPosition(Elevator elevator, double targetPosition) {
+    public SetElevatorPosition(Elevator elevator, double targetPosition) {
         super();
         this.elevator = elevator;
         this.targetPosition = targetPosition;

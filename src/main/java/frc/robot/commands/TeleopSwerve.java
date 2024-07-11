@@ -8,8 +8,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.subsystems.swerve.Swerve;
 
-
-
 public class TeleopSwerve extends Command {    
     private Swerve swerve;    
     private DoubleSupplier translationSup;

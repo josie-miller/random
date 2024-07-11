@@ -20,7 +20,7 @@ public class Handoff extends SubsystemBase {
 
     public void runHandoff(double voltage) {
         setpointVolts = voltage;
-        handoffIO.runHandoff(voltage);
+        handoffIO.runHandoff(setpointVolts);
     }
 
     public double getStatorCurrent(){
