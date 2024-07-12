@@ -1,50 +1,126 @@
 package frc.robot.subsystems.otb_intake;
 
-import org.littletonrobotics.junction.Logger;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.GravityTypeValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 
-public class OtbIntake extends SubsystemBase {
-    private final OtbIntakeIO otbintakeIO;
-    private OtbIntakeIOInputsAutoLogged inputs = new OtbIntakeIOInputsAutoLogged();
+import frc.commons.Conversions;
+import frc.robot.constants.canIDConstants;
+import frc.robot.constants.otbIntakeConstants;
 
-    private double setpointVolts;
-    private double pivotSetpoint;
+public class OtbIntakeIOReal implements OtbIntakeIO {
+    private final TalonFX pivotMotor = new TalonFX(canIDConstants.otbIntakePivotMotor, "canivore");
+    private final TalonFX intakeMotor = new TalonFX(canIDConstants.otbIntakeMotor, "rio");
+    private final TalonFXConfiguration pivotConfigs = new TalonFXConfiguration();
+    private final TalonFXConfiguration intakeConfigs = new TalonFXConfiguration();
 
-    public OtbIntake(OtbIntakeIO otbintakeIO) {
-        this.otbintakeIO = otbintakeIO;
-        setpointVolts = 0.0;
-        pivotSetpoint = 0.0;
+    private MotionMagicVoltage pivotMotorMotionMagicRequest = new MotionMagicVoltage(0).withSlot(0).withEnableFOC(true);
+    private VoltageOut pivotMotorVoltageRequest = new VoltageOut(0).withEnableFOC(true);
+    private VoltageOut intakeMotorVoltageRequest = new VoltageOut(0).withEnableFOC(true);
+
+    private final StatusSignal<Double> pivotCurrent = pivotMotor.getStatorCurrent();
+    private final StatusSignal<Double> pivotTemp = pivotMotor.getDeviceTemp();
+    private final StatusSignal<Double> pivotRPS = pivotMotor.getRotorVelocity();
+    private final StatusSignal<Double> pivotPos = pivotMotor.getRotorPosition();
+    private final StatusSignal<Double> intakeCurrent = intakeMotor.getStatorCurrent();
+    private final StatusSignal<Double> intakeTemp = intakeMotor.getDeviceTemp();
+    private final StatusSignal<Double> intakeRPS = intakeMotor.getRotorVelocity();
+
+   private double pivotSetpoint;
+   private double setpointVolts;
+
+    public OtbIntakeIOReal() {
+        pivotConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        pivotConfigs.MotorOutput.Inverted = otbIntakeConstants.pivotInvert;
+        pivotConfigs.CurrentLimits.StatorCurrentLimit = otbIntakeConstants.pivotCurrentLimit;
+        pivotConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
+        
+        intakeConfigs.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+        intakeConfigs.MotorOutput.Inverted = otbIntakeConstants.intakeInvert;
+        intakeConfigs.CurrentLimits.StatorCurrentLimit = otbIntakeConstants.intakeCurrentLimit;
+        intakeConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
+
+        pivotConfigs.Slot0.kP = otbIntakeConstants.kP; 
+        pivotConfigs.Slot0.kI = otbIntakeConstants.kI;
+        pivotConfigs.Slot0.kD = otbIntakeConstants.kD;
+        pivotConfigs.Slot0.kS = otbIntakeConstants.kS; 
+        pivotConfigs.Slot0.kV = otbIntakeConstants.kV; 
+        pivotConfigs.Slot0.kA = otbIntakeConstants.kA;
+        pivotConfigs.Slot0.kG = otbIntakeConstants.kG;
+        pivotConfigs.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
+
+        pivotConfigs.MotionMagic.MotionMagicCruiseVelocity = otbIntakeConstants.CruiseVelocity;
+        pivotConfigs.MotionMagic.MotionMagicAcceleration = otbIntakeConstants.Acceleration;
+        pivotConfigs.MotionMagic.MotionMagicJerk = otbIntakeConstants.Jerk;
+
+        pivotMotor.setPosition(0);
+
+        pivotMotor.getConfigurator().apply(pivotConfigs);
+        intakeMotor.getConfigurator().apply(intakeConfigs);
+
+        BaseStatusSignal.setUpdateFrequencyForAll(
+                50,
+                pivotCurrent,
+                pivotPos,
+                pivotRPS,
+                pivotTemp,
+                intakeCurrent,
+                intakeTemp,
+                intakeRPS
+               );
+
+        intakeMotor.optimizeBusUtilization();
+        pivotMotor.optimizeBusUtilization();
+
+        pivotSetpoint = 0;
+        setpointVolts = 0;
     }
-    
-    public void periodic(){
-        otbintakeIO.updateInputs(inputs);
-        Logger.processInputs("OTB_Intake", inputs);
+
+    @Override
+    public void setPivotVoltage(double voltage) {
+        pivotMotor.setControl(pivotMotorVoltageRequest.withOutput(voltage));
     }
 
-    public void requestPivotVoltage(double voltage) {
-        otbintakeIO.setPivotVoltage(voltage);
+    @Override
+    public void setPivotPosition(double angleDegrees) {
+        this.pivotSetpoint = angleDegrees;
+        double pivotSetpointRotations = Conversions.DegreesToRotations(angleDegrees, otbIntakeConstants.gearRatio);
+        pivotMotor.setControl(pivotMotorMotionMagicRequest.withPosition(pivotSetpointRotations));
     }
 
-    public void requestSetpoint(double angleDegrees) {
-        pivotSetpoint = angleDegrees;
-        otbintakeIO.setPivotPosition(pivotSetpoint);
+    @Override
+    public void setIntakeVoltage(double voltage) {
+        this.setpointVolts = voltage;
+        intakeMotor.setControl(intakeMotorVoltageRequest.withOutput(setpointVolts));
     }
 
-    public void requestIntakeVoltage(double voltage) {
-        setpointVolts = voltage;
-        otbintakeIO.setIntakeVoltage(setpointVolts);
+    @Override
+    public void zeroPosition() {
+        pivotMotor.setPosition(0);
     }
 
-     public void requestIntake(double angleDegrees, double voltage) {
-        requestSetpoint(angleDegrees);
-        requestIntakeVoltage(voltage);
-    }
-
-    public double getStatorCurrent(){
-        return inputs.intakeCurrent;
-    }
-
-    public double getPivotStatorCurrent(){
-        return inputs.pivotCurrent;
+    public void updateInputs(OtbIntakeIOInputs inputs) {
+        BaseStatusSignal.refreshAll(
+                pivotCurrent,
+                pivotPos,
+                pivotRPS,
+                pivotTemp,
+                intakeCurrent,
+                intakeTemp,
+                intakeRPS
+        );
+        inputs.intakeCurrent = intakeCurrent.getValue();
+        inputs.intakeTemp = intakeTemp.getValue();
+        inputs.intakeRPS = intakeRPS.getValue();
+        inputs.pivotCurrent = pivotCurrent.getValue();
+        inputs.pivotTemp = pivotTemp.getValue();
+        inputs.pivotRPS = pivotRPS.getValue();
+        inputs.setpointVolts = this.setpointVolts;
+        inputs.pivotSetpointDeg = this.pivotSetpoint;
     }
 }
