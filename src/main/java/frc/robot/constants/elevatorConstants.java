@@ -5,7 +5,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.util.Units;
 
 public class elevatorConstants {
-    public static final InvertedValue leftMotorInvert = InvertedValue.Clockwise_Positive;
+    public static final InvertedValue leftMotorInvert = InvertedValue.CounterClockwise_Positive;
 
     public static final double gearRatio = 17;
     public static final double wheelCircumferenceMeters = Units.inchesToMeters(5.51873699838);
