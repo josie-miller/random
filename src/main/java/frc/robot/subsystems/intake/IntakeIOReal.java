@@ -35,6 +35,8 @@ public class IntakeIOReal implements IntakeIO {
             RPS);
 
         intake.optimizeBusUtilization();
+
+        setpointVolts = 0;
     }
 
     public void updateInputs(IntakeIOInputs inputs) {
