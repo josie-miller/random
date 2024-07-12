@@ -67,6 +67,9 @@ public class ShooterIOReal implements ShooterIO{
 
         leftMotor.optimizeBusUtilization();
         rightMotor.optimizeBusUtilization();
+
+        leftShooterSetpointMPS = 0;
+        rightShooterSetpointMPS = 0;
     }   
 
     public void updateInputs(ShooterIOInputs inputs) {
@@ -89,16 +92,16 @@ public class ShooterIOReal implements ShooterIO{
     }
 
     public void setVelocity(double velocity, double ratio) {
-        leftShooterSetpointMPS = velocity;
-        rightShooterSetpointMPS = velocity * ratio;
+        this.leftShooterSetpointMPS = velocity;
+        this.rightShooterSetpointMPS = velocity * ratio;
         leftMotor.setControl(leftShootRequestVelocity.withVelocity(Conversions.MPStoRPS(velocity, shooterConstants.wheelCircumferenceMeters, 1)));
         rightMotor.setControl(rightShootRequestVelocity.withVelocity(Conversions.MPStoRPS(velocity * ratio, shooterConstants.wheelCircumferenceMeters, 1)));
 
     }
 
     public void zeroVelocity(){
-        leftShooterSetpointMPS = 0;
-        rightShooterSetpointMPS = 0;
+        this.leftShooterSetpointMPS = 0;
+        this.rightShooterSetpointMPS = 0;
         leftMotor.setControl(leftShootRequestVelocity.withVelocity(0));
         rightMotor.setControl(rightShootRequestVelocity.withVelocity(0));
     }
