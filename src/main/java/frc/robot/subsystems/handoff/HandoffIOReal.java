@@ -35,6 +35,8 @@ public class HandoffIOReal implements HandoffIO {
             RPS);
 
         handoff.optimizeBusUtilization();
+
+        setpointVolts = 0;
     }
 
     public void updateInputs(HandoffIOInputs inputs) {
