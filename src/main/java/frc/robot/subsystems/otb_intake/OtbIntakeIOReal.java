@@ -76,6 +76,9 @@ public class OtbIntakeIOReal implements OtbIntakeIO {
 
         intakeMotor.optimizeBusUtilization();
         pivotMotor.optimizeBusUtilization();
+
+        pivotSetpoint = 0;
+        setpointVolts = 0;
     }
 
     @Override
@@ -85,14 +88,14 @@ public class OtbIntakeIOReal implements OtbIntakeIO {
 
     @Override
     public void setPivotPosition(double angleDegrees) {
-        pivotSetpoint = angleDegrees;
+        this.pivotSetpoint = angleDegrees;
         double pivotSetpointRotations = Conversions.DegreesToRotations(angleDegrees, otbIntakeConstants.gearRatio);
         pivotMotor.setControl(pivotMotorMotionMagicRequest.withPosition(pivotSetpointRotations));
     }
 
     @Override
     public void setIntakeVoltage(double voltage) {
-        setpointVolts = voltage;
+        this.setpointVolts = voltage;
         intakeMotor.setControl(intakeMotorVoltageRequest.withOutput(setpointVolts));
     }
 
@@ -118,6 +121,6 @@ public class OtbIntakeIOReal implements OtbIntakeIO {
         inputs.pivotTemp = pivotTemp.getValue();
         inputs.pivotRPS = pivotRPS.getValue();
         inputs.setpointVolts = this.setpointVolts;
-        inputs.pivotSetpointDeg = pivotSetpoint;
+        inputs.pivotSetpointDeg = this.pivotSetpoint;
     }
 }
