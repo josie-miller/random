@@ -23,13 +23,6 @@ public class Intake extends SubsystemBase {
         intakeIO.runIntake(setpointVolts);
     }
 
-    /*public Command runIntake(double voltage, double time) {
-        return this.run(() -> intakeIO.runIntake(voltage))
-            .withTimeout(time)
-            .andThen(this.runOnce(() -> intakeIO.runIntake(0)))
-                .onlyIf(() -> atSetpoint());
-    }*/
-
     public double getStatorCurrent(){
         return inputs.currentAmps;
     }

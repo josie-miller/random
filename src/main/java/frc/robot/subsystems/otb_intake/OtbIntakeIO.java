@@ -19,7 +19,7 @@ public interface OtbIntakeIO {
 
     public void setPivotVoltage(double voltage);
 
-    public void setPivotPosition(double position);
+    public void setPivotPosition(double angleDegrees);
 
     public void setIntakeVoltage(double voltage);
 

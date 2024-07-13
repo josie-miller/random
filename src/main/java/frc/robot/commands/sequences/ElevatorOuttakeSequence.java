@@ -25,7 +25,6 @@ public class ElevatorOuttakeSequence extends ParallelCommandGroup {
                 new RunIntake2(intake, commandConstants.outakeVoltage, 0.75),
                 new SetElevatorPosition(elevator, commandConstants.minHeight)
                 )
-
         );
     }
 }

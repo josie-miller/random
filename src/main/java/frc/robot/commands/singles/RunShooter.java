@@ -36,6 +36,6 @@ public class RunShooter extends Command {
 
     @Override
     public boolean isFinished() {
-        return RobotController.getFPGATime() / 1.0E6 - stateStartTime > time;
+        return (RobotController.getFPGATime() / 1.0E6 - stateStartTime > time);
     }
 }

@@ -1,8 +1,10 @@
 package frc.robot;
 
+import com.choreo.lib.ChoreoTrajectory;
+import com.choreo.lib.*;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import frc.robot.subsystems.elevator.Elevator;
@@ -32,6 +34,8 @@ public class RobotContainer {
     private final OtbIntake otbIntake = new OtbIntake(new OtbIntakeIOReal());
     private final Swerve swerve = new Swerve();
     public static final CommandXboxController operatorController = new CommandXboxController(0);
+
+    ChoreoTrajectory traj;
 
     public RobotContainer() {
     swerve.zeroWheels();
