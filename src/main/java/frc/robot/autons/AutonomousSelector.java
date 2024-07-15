@@ -12,12 +12,30 @@ public class AutonomousSelector {
     private SendableChooser<modes> autonomousSelector = new SendableChooser<modes>();
     String mode;
      public enum modes{
-        TWOPIECEAMP
+        TWOPIECEAMP,
+        TWOPIECEMID,
+        TWOPIECESOURCE,
+        PRELOADAMP,
+        PRELOADMID,
+        PRELOADSOURCE,
+        CHOREOTEST
         }
     
     public AutonomousSelector(Swerve swerve, Intake intake, OtbIntake otbIntake, Handoff handoff, Shooter shooter){
 
-        autonomousSelector.setDefaultOption("TWOPIECEAMP", modes.TWOPIECEAMP);
+        autonomousSelector.setDefaultOption("CHOREOTEST", modes.CHOREOTEST);
+
+        autonomousSelector.addOption("TWOPIECEAMP", modes.TWOPIECEAMP);
+
+        autonomousSelector.addOption("TWOPIECEMID", modes.TWOPIECEMID);
+
+        autonomousSelector.addOption("TWOPIECESOURCE", modes.TWOPIECESOURCE);
+
+        autonomousSelector.addOption("PRELOADAMP", modes.PRELOADAMP);
+
+        autonomousSelector.addOption("PRELOADMID", modes.PRELOADMID);
+
+        autonomousSelector.addOption("PRELOADSOURCE", modes.PRELOADSOURCE);
 
         SmartDashboard.putData("Auto Choices", autonomousSelector);
     }

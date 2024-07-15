@@ -1,10 +1,11 @@
 package frc.robot;
 
 import com.choreo.lib.ChoreoTrajectory;
-import com.choreo.lib.*;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import frc.robot.subsystems.elevator.Elevator;
@@ -21,10 +22,12 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.autons.AutonomousSelector;
 import frc.robot.autons.AutonomousSelector.modes;
 import frc.robot.commands.TeleopSwerve;
-import frc.robot.commands.sequences.ElevatorOuttakeSequence;
 import frc.robot.commands.sequences.IntakeSequence;
 import frc.robot.commands.sequences.ShootSequence;
-
+import frc.robot.commands.singles.RunHandoff;
+import frc.robot.commands.singles.RunIntake;
+import frc.robot.commands.singles.RunIntake2;
+import frc.robot.commands.singles.SetPivot;
 import frc.robot.constants.commandConstants;
 
 public class RobotContainer {
@@ -34,7 +37,8 @@ public class RobotContainer {
     private final Shooter shooter = new Shooter(new ShooterIOReal());
     private final OtbIntake otbIntake = new OtbIntake(new OtbIntakeIOReal());
     private final Swerve swerve = new Swerve();
-    public static final CommandXboxController operatorController = new CommandXboxController(0);
+    //public final CommandXboxController controller = new CommandXboxController(1);
+    public final CommandXboxController operator = new CommandXboxController(0);
     private AutonomousSelector selector;
 
     ChoreoTrajectory traj;
@@ -45,9 +49,9 @@ public class RobotContainer {
     swerve.setDefaultCommand(
             new TeleopSwerve(
                 swerve, 
-                () -> -operatorController.getRawAxis(XboxController.Axis.kLeftY.value),
-                () -> -operatorController.getRawAxis(XboxController.Axis.kLeftX.value), 
-                () -> -operatorController.getRawAxis(XboxController.Axis.kRightX.value)
+                () -> operator.getRawAxis(XboxController.Axis.kLeftY.value),
+                () -> operator.getRawAxis(XboxController.Axis.kLeftX.value), 
+                () -> operator.getRawAxis(XboxController.Axis.kRightX.value)
               
             )
         );
@@ -56,17 +60,50 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        operatorController.a()
+
+        operator.a() //IDLE
+            .onTrue(new ParallelCommandGroup(
+                new SetPivot(otbIntake, commandConstants.restingDegrees),
+                new RunCommand(() -> handoff.runHandoff(0)),
+                new RunCommand(() -> intake.runIntake(0)),
+                new InstantCommand(() -> elevator.setSetpoint(0)),
+                new RunCommand(() -> shooter.setVelocity(0,0))
+            ) {{addRequirements(intake, handoff, otbIntake, elevator, shooter);}}
+        );
+
+        operator.rightBumper() //INTAKE
             .onTrue(new IntakeSequence(otbIntake, intake, handoff));
 
-        operatorController.x() // Elevator
-            .onTrue(new ElevatorOuttakeSequence(elevator, intake, otbIntake));
+        operator.x() //SHOOT SUBWOOFER AMP
+            .onTrue(new ShootSequence(intake, handoff, shooter, commandConstants.leftShootTime, commandConstants.leftShootRatio, commandConstants.handoffIntakeVoltage, commandConstants.handoffShooterVoltage, commandConstants.shootLeftVelocity, commandConstants.leftShortTime));
 
-        operatorController.y() //AMP Shoot
+        operator.y() //SHOOT SUBWOOFER MID
+            .onTrue(new ShootSequence(intake, handoff, shooter, commandConstants.midShootTime, commandConstants.midShootRatio, commandConstants.handoffIntakeVoltage, commandConstants.handoffShooterVoltage, commandConstants.shootMidVelocity, commandConstants.midShortTime));
+       
+        operator.b() //SHOOT SUBWOOFER SOURCE
+            .onTrue(new ShootSequence(intake, handoff, shooter, commandConstants.rightShootTime, commandConstants.rightShootRatio, commandConstants.handoffIntakeVoltage, commandConstants.handoffShooterVoltage, commandConstants.shootRightVelocity, commandConstants.rightShortTime));
+            
+        operator.leftBumper() //SHOOT AMP
             .onTrue(new ShootSequence(intake, handoff, shooter, commandConstants.AMPShootTime, commandConstants.AMPShootRatio, commandConstants.handoffIntakeVoltage, commandConstants.handoffShooterVoltage, commandConstants.AMPShooterVelocity, commandConstants.AMPShortTime));
 
-        operatorController.b() //Speaker Mid Shoot
-            .onTrue(new ShootSequence(intake, handoff, shooter, commandConstants.midShootTime, commandConstants.midShootRatio, commandConstants.handoffIntakeVoltage, commandConstants.handoffShooterVoltage, commandConstants.shootMidVelocity, commandConstants.midShortTime));
+        operator.leftTrigger() //OUTTAKE
+            .onTrue(new ParallelCommandGroup(
+                new SetPivot(otbIntake, commandConstants.restingDegrees),
+                new RunIntake2(intake, commandConstants.outakeVoltage, 2.0),
+                new RunHandoff(handoff, -2, 2.0)
+            ) {{addRequirements(intake, handoff, otbIntake);}}
+        );
+
+        operator.rightTrigger() //INTAKE W/O OTB
+            .onTrue(new ParallelCommandGroup(
+                new SetPivot(otbIntake, commandConstants.restingDegrees),
+                new RunIntake(intake, commandConstants.intakeVoltage)
+            ) {{addRequirements(intake, otbIntake);}});
+
+        
+        /*controller.b()
+            .onTrue(new InstantCommand(() -> swerve.zeroGyro()));*/
+
     }
 
     public modes getAutonomousCommand() {

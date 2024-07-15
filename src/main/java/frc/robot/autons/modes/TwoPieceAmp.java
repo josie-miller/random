@@ -25,13 +25,13 @@ public class TwoPieceAmp extends SequentialCommandGroup {
         addCommands(
             new InstantCommand(() -> swerve.setGyroStartingPosition( DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue? 60 : -60)),
             new ShootSequence(intake, handoff, shooter, commandConstants.leftShootTime, commandConstants.leftShootRatio, commandConstants.handoffIntakeVoltage, commandConstants.handoffShooterVoltage, commandConstants.shootLeftVelocity, commandConstants.leftShortTime),
-            new WaitCommand(1.25),
+            new WaitCommand(0.25),
             new ParallelCommandGroup(
-                swerve.runChoreoTraj(Choreo.getTrajectory("ampCloseForward"), true),
+                swerve.runChoreoTraj(Choreo.getTrajectory("ampCloseForwardAMP"), true),
                 new IntakeSequence(otbIntake, intake, handoff)
             ),
             new WaitCommand(1),
-            swerve.runChoreoTraj(Choreo.getTrajectory("ampCloseBackward")),
+            swerve.runChoreoTraj(Choreo.getTrajectory("ampCloseBackwardAMP")),
             new ShootSequence(intake, handoff, shooter, commandConstants.leftShootTime, commandConstants.leftShootRatio, commandConstants.handoffIntakeVoltage, commandConstants.handoffShooterVoltage, commandConstants.shootLeftVelocity, commandConstants.leftShortTime)
         );
     }

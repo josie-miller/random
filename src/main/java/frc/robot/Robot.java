@@ -20,14 +20,26 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autons.AutonomousSelector.modes;
+import frc.robot.autons.modes.ChoreoTest;
+import frc.robot.autons.modes.PreloadAmp;
+import frc.robot.autons.modes.PreloadMid;
+import frc.robot.autons.modes.PreloadSource;
 import frc.robot.autons.modes.TwoPieceAmp;
+import frc.robot.autons.modes.TwoPieceMid;
+import frc.robot.autons.modes.TwoPieceSource;
 
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
 
+  SequentialCommandGroup choreo_test;
   SequentialCommandGroup two_piece_amp;
+  SequentialCommandGroup two_piece_mid;
+  SequentialCommandGroup two_piece_source;
+  SequentialCommandGroup preload_amp;
+  SequentialCommandGroup preload_mid;
+  SequentialCommandGroup preload_source;
 
   private boolean built = false;
 
@@ -62,8 +74,13 @@ public class Robot extends LoggedRobot {
   @Override
   public void disabledPeriodic() {
       if (DriverStation.getAlliance().isPresent() && !built){
+        choreo_test = new ChoreoTest(m_robotContainer.getSwerve(), m_robotContainer.getIntake(), m_robotContainer.getOtbIntake(), m_robotContainer.getHandoff(), m_robotContainer.getShooter());
         two_piece_amp = new TwoPieceAmp(m_robotContainer.getSwerve(), m_robotContainer.getIntake(), m_robotContainer.getOtbIntake(), m_robotContainer.getHandoff(), m_robotContainer.getShooter());
-      
+        two_piece_mid = new TwoPieceMid(m_robotContainer.getSwerve(), m_robotContainer.getIntake(), m_robotContainer.getOtbIntake(), m_robotContainer.getHandoff(), m_robotContainer.getShooter());
+        two_piece_source = new TwoPieceSource(m_robotContainer.getSwerve(), m_robotContainer.getIntake(), m_robotContainer.getOtbIntake(), m_robotContainer.getHandoff(), m_robotContainer.getShooter());
+        preload_amp = new PreloadAmp(m_robotContainer.getSwerve(), m_robotContainer.getIntake(), m_robotContainer.getOtbIntake(), m_robotContainer.getHandoff(), m_robotContainer.getShooter());
+        preload_mid = new PreloadMid(m_robotContainer.getSwerve(), m_robotContainer.getIntake(), m_robotContainer.getOtbIntake(), m_robotContainer.getHandoff(), m_robotContainer.getShooter());
+        preload_source = new PreloadSource(m_robotContainer.getSwerve(), m_robotContainer.getIntake(), m_robotContainer.getOtbIntake(), m_robotContainer.getHandoff(), m_robotContainer.getShooter());
       built = true;
 
       }
@@ -75,8 +92,26 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void autonomousInit() {
-    if(m_robotContainer.getAutonomousCommand() == modes.TWOPIECEAMP){
+    if (m_robotContainer.getAutonomousCommand() == modes.CHOREOTEST){
+      m_autonomousCommand = choreo_test;
+    }
+    else if (m_robotContainer.getAutonomousCommand() == modes.TWOPIECEAMP){
       m_autonomousCommand = two_piece_amp;
+    }
+    else if (m_robotContainer.getAutonomousCommand() == modes.TWOPIECEMID){
+      m_autonomousCommand = two_piece_mid;
+    }
+    else if (m_robotContainer.getAutonomousCommand() == modes.TWOPIECESOURCE){
+      m_autonomousCommand = two_piece_source;
+    }
+    else if (m_robotContainer.getAutonomousCommand() == modes.PRELOADAMP){
+      m_autonomousCommand = preload_amp;
+    }
+    else if (m_robotContainer.getAutonomousCommand() == modes.PRELOADMID){
+      m_autonomousCommand = preload_mid;
+    }
+    else if (m_robotContainer.getAutonomousCommand() == modes.PRELOADSOURCE){
+      m_autonomousCommand = preload_source;
     }
     else if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
