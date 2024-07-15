@@ -18,7 +18,8 @@ import frc.robot.subsystems.otb_intake.OtbIntakeIOReal;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIOReal;
 import frc.robot.subsystems.swerve.Swerve;
-
+import frc.robot.autons.AutonomousSelector;
+import frc.robot.autons.AutonomousSelector.modes;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.sequences.ElevatorOuttakeSequence;
 import frc.robot.commands.sequences.IntakeSequence;
@@ -34,6 +35,7 @@ public class RobotContainer {
     private final OtbIntake otbIntake = new OtbIntake(new OtbIntakeIOReal());
     private final Swerve swerve = new Swerve();
     public static final CommandXboxController operatorController = new CommandXboxController(0);
+    private AutonomousSelector selector;
 
     ChoreoTrajectory traj;
 
@@ -67,7 +69,33 @@ public class RobotContainer {
             .onTrue(new ShootSequence(intake, handoff, shooter, commandConstants.midShootTime, commandConstants.midShootRatio, commandConstants.handoffIntakeVoltage, commandConstants.handoffShooterVoltage, commandConstants.shootMidVelocity, commandConstants.midShortTime));
     }
 
-    public Command getAutonomousCommand() {
-        return null;
+    public modes getAutonomousCommand() {
+        return selector.get();
     }
+
+    public void configureAutonomousSelector(){
+    selector = new AutonomousSelector(swerve, intake, otbIntake, handoff, shooter);
+    }
+
+    public Swerve getSwerve(){
+        return swerve;
+    }
+
+    public Intake getIntake(){
+        return intake;
+    }
+
+    public OtbIntake getOtbIntake(){
+        return otbIntake;
+    }
+
+    public Handoff getHandoff(){
+        return handoff;
+    }
+
+    public Shooter getShooter(){
+        return shooter;
+    }
+
+
 }

@@ -13,15 +13,23 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import com.ctre.phoenix6.SignalLogger;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.autons.AutonomousSelector.modes;
+import frc.robot.autons.modes.TwoPieceAmp;
 
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+
+  SequentialCommandGroup two_piece_amp;
+
+  private boolean built = false;
 
   @Override
   public void robotInit() {
@@ -52,16 +60,25 @@ public class Robot extends LoggedRobot {
   public void disabledInit() {}
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+      if (DriverStation.getAlliance().isPresent() && !built){
+        two_piece_amp = new TwoPieceAmp(m_robotContainer.getSwerve(), m_robotContainer.getIntake(), m_robotContainer.getOtbIntake(), m_robotContainer.getHandoff(), m_robotContainer.getShooter());
+      
+      built = true;
+
+      }
+
+  }
 
   @Override
   public void disabledExit() {}
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    if (m_autonomousCommand != null) {
+    if(m_robotContainer.getAutonomousCommand() == modes.TWOPIECEAMP){
+      m_autonomousCommand = two_piece_amp;
+    }
+    else if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
   }
