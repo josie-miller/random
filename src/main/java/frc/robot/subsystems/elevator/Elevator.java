@@ -33,7 +33,7 @@ public class Elevator extends SubsystemBase {
         var leftMotorConfigs = new TalonFXConfiguration();
         leftMotorConfigs.CurrentLimits.StatorCurrentLimit = Constants.elevatorConstants.statorCurrentLimit;
         leftMotorConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
-        leftMotorConfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive; // changed this
+        leftMotorConfigs.MotorOutput.Inverted = Constants.elevatorConstants.leftMotorInvert;
         leftMotorConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.elevatorConstants.CruiseVelocityUp;
         leftMotorConfigs.MotionMagic.MotionMagicAcceleration = Constants.elevatorConstants.AccelerationUp;
         leftMotorConfigs.Slot0.kP = Constants.elevatorConstants.kP;
