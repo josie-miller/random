@@ -100,7 +100,7 @@ public final class Constants {
 
         // copied straight from elevator 
 
-        public static final InvertedValue leftMotorInvert = InvertedValue.Clockwise_Positive; 
+        public static final InvertedValue leftMotorInvert = InvertedValue.CounterClockwise_Positive; 
         public static final double gearRatio = 17;
         public static final double wheelCircumferenceMeters = Units.inchesToMeters(5.51873699838);
         public static final double minHeightMeters = 0.0;
