@@ -1,7 +1,5 @@
 package frc.robot;
 
-import com.choreo.lib.ChoreoTrajectory;
-
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -40,8 +38,6 @@ public class RobotContainer {
     //public final CommandXboxController controller = new CommandXboxController(1);
     public final CommandXboxController operator = new CommandXboxController(0);
     private AutonomousSelector selector;
-
-    ChoreoTrajectory traj;
 
     public RobotContainer() {
     swerve.zeroWheels();
@@ -133,6 +129,5 @@ public class RobotContainer {
     public Shooter getShooter(){
         return shooter;
     }
-
 
 }
