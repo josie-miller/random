@@ -104,7 +104,7 @@ public final class Constants {
         public static final double gearRatio = 17;
         public static final double wheelCircumferenceMeters = Units.inchesToMeters(5.51873699838);
         public static final double minHeightMeters = 0.0;
-        public static final double maxHeightMeters = 0.45;
+        public static final double maxHeightMeters = 0.44;
 
         public static final double minHeightInRotations = 0;
         public static final double maxHeightInRotations = 0.0;
@@ -183,7 +183,7 @@ public final class Constants {
         public static final double midShootRatio = 0.7;
         public static final double rightShootRatio = 1.7;
         public static final double leftShootRatio = 0.5;
-        public static final double maxHeight = 0.45;
+        public static final double maxHeight = 0.44;
         public static final double minHeight = 0.0;
         public static final double midShootTime = 1.2;
         public static final double rightShootTime = 0.7;
@@ -193,7 +193,7 @@ public final class Constants {
         public static final double leftShortTime = 0.4;
         public static final double rightShortTime = 0.4;
         public static final double midShortTime = 0.8;
-        public static final double AMPShortTime = 0.4;
+        public static final double AMPShortTime = 0.6;
         public static final double floorDegrees = 138;
         public static final double otbVoltage = 4;
         public static final double restingDegrees = 21;

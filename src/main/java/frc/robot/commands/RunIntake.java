@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.handoff.Handoff;
 import frc.robot.subsystems.intake.Intake;
 import edu.wpi.first.wpilibj.RobotController;
 
@@ -33,6 +34,6 @@ public class RunIntake extends Command {
 
     @Override
     public boolean isFinished() {
-        return intake.getStatorCurrent() > 38 && (RobotController.getFPGATime() / 1.0E6 - stateStartTime > 0.25);
+        return intake.getStatorCurrent() > 27 && (RobotController.getFPGATime() / 1.0E6 - stateStartTime > 0.25);
     }
 }

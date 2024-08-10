@@ -10,19 +10,17 @@ import edu.wpi.first.wpilibj.RobotController;
 public class RunOTB extends Command {
     private final otbIntake otbIntake;
     private final double voltage;
-    private final double angleDegrees;
 
 
-    public RunOTB(otbIntake otbIntake, double voltage, double angleDegrees) {
+    public RunOTB(otbIntake otbIntake, double voltage) {
         this.otbIntake = otbIntake;
         this.voltage = voltage;
-        this.angleDegrees = angleDegrees;
         addRequirements(otbIntake);
     }
 
     @Override
     public void initialize() {
-        otbIntake.requestIntake(angleDegrees,voltage);
+        otbIntake.requestIntakeVoltage(voltage);
     }
 
     @Override
@@ -31,7 +29,7 @@ public class RunOTB extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        otbIntake.requestIntake(Constants.commandConstants.restingDegrees, 0.0);
+        otbIntake.requestIntakeVoltage(0.0);
     }
 
     @Override

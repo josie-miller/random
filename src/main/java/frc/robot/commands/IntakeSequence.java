@@ -13,9 +13,7 @@ public class IntakeSequence extends ParallelDeadlineGroup {
     public IntakeSequence(otbIntake otbIntake, Intake intake, Handoff handoff) {
         super(
            // new RunIntake(intake, Constants.commandConstants.intakeVoltage),
-            new RunOTB(otbIntake, Constants.commandConstants.otbVoltage, Constants.commandConstants.floorDegrees)
-
-            
+            new RunOTB(otbIntake, Constants.commandConstants.otbVoltage)
         );
         setDeadline(new RunIntake(intake, Constants.commandConstants.intakeVoltage));
     }

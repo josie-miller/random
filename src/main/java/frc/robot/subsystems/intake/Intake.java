@@ -49,6 +49,11 @@ public class Intake extends SubsystemBase {
         intakeMotor.setControl(intakeRequest.withOutput(voltage));
     }
 
+    public void cancelIntake() {
+        setpointVolts = 0;
+        intakeMotor.setControl(intakeRequest.withOutput(0));
+    }
+
     
     public double getStatorCurrent(){
         return current.getValue();
