@@ -8,7 +8,9 @@ import frc.robot.subsystems.handoff.Handoff;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.otb_intake.otbIntake;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.commands.ShootSequence;
+import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.AMPShoot;
 import frc.robot.commands.ElevatorOuttakeSequence;
 import frc.robot.commands.Hardstop;
@@ -23,10 +25,22 @@ public class RobotContainer {
     private final Elevator elevator = new Elevator();
     private final Handoff handoff = new Handoff();
     private final Shooter shooter = new Shooter();
+    private final Swerve swerve = new Swerve();
     private final otbIntake otbIntake = new otbIntake();
     public static final CommandXboxController operatorController = new CommandXboxController(0);
 
     public RobotContainer() {
+        swerve.zeroWheels();
+        swerve.zeroGyro();
+        swerve.setDefaultCommand(
+            new TeleopSwerve(
+                swerve, 
+                () -> -operatorController.getRawAxis(XboxController.Axis.kLeftY.value),
+                () -> -operatorController.getRawAxis(XboxController.Axis.kLeftX.value), 
+                () -> -operatorController.getRawAxis(XboxController.Axis.kRightX.value)
+              
+            )
+        );
     configureButtonBindings();
     }
 
