@@ -76,7 +76,6 @@ public class Module {
         steerRequest = new PositionVoltage(0).withEnableFOC(true);
         velocityVoltageRequest = new VelocityVoltage(0).withEnableFOC(true);
         driveVoltageRequest = new VoltageOut(0).withEnableFOC(true);
-        new VoltageOut(0).withEnableFOC(true);
 
         //sensors
         driveMotor.setPosition(0);
