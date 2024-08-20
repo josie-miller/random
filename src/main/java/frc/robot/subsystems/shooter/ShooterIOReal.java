@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -97,6 +98,11 @@ public class ShooterIOReal implements ShooterIO{
         leftMotor.setControl(leftShootRequestVelocity.withVelocity(Conversions.MPStoRPS(velocity, shooterConstants.wheelCircumferenceMeters, 1)));
         rightMotor.setControl(rightShootRequestVelocity.withVelocity(Conversions.MPStoRPS(velocity * ratio, shooterConstants.wheelCircumferenceMeters, 1)));
 
+    }
+
+    public void setVoltage(double voltage){
+        leftMotor.setControl(shootRequestVoltage.withOutput(voltage));
+        rightMotor.setControl(new Follower(leftMotor.getDeviceID(), true));
     }
 
     public void zeroVelocity(){

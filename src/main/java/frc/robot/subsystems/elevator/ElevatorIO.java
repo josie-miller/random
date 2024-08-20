@@ -21,7 +21,7 @@ public default void zeroSensor() {
 public default void setMotionMagicSetpoint(double setpointMeters) {
 }
 
-public default void runElevator(double voltage) {
+public default void setVoltage(double voltage) {
 
 }
 

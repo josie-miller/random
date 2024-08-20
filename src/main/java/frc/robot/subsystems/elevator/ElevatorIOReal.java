@@ -72,7 +72,7 @@ public class ElevatorIOReal implements ElevatorIO {
         leftMotor.setControl(motionMagicRequest.withPosition(Conversions.metersToRotations(setpointMeters, elevatorConstants.wheelCircumferenceMeters, elevatorConstants.gearRatio)));
     }
 
-    public void runElevator(double voltage) {
+    public void setVoltage(double voltage) {
         leftMotor.setControl(voltageOutRequest.withOutput(voltage));
     }
 

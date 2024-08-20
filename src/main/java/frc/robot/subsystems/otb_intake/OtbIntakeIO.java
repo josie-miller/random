@@ -13,6 +13,7 @@ public interface OtbIntakeIO {
         public double pivotTemp = 0.0;
         public double pivotRPS = 0.0;
         public double pivotSetpointDeg = 0.0;
+        public double pivotPosDeg = 0.0;
     }
 
     public void updateInputs(OtbIntakeIOInputs inputs);

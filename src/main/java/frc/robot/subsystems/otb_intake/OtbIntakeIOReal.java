@@ -120,6 +120,7 @@ public class OtbIntakeIOReal implements OtbIntakeIO {
         inputs.pivotCurrent = pivotCurrent.getValue();
         inputs.pivotTemp = pivotTemp.getValue();
         inputs.pivotRPS = pivotRPS.getValue();
+        inputs.pivotPosDeg = Conversions.RotationsToDegrees(pivotPos.getValue(), otbIntakeConstants.gearRatio);
         inputs.setpointVolts = this.setpointVolts;
         inputs.pivotSetpointDeg = this.pivotSetpoint;
     }
