@@ -20,7 +20,8 @@ public class Elevator extends SubsystemBase {
         elevatorIO.setMotionMagicSetpoint(setpointRotations);
     }
 
-    public void Loop() {
+    @Override
+    public void periodic() {
         elevatorIO.updateInputs(inputs);
         Logger.processInputs("Elevator", inputs);
     }

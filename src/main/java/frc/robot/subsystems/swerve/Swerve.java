@@ -61,28 +61,6 @@ public class Swerve extends SubsystemBase{
             0,
             new Rotation2d()));
 
-    private final SysIdRoutine driveRoutine = new SysIdRoutine(new SysIdRoutine.Config(
-        null, 
-        Volts.of(3), 
-        Seconds.of(4), 
-        (state) -> SignalLogger.writeString("state", state.toString())), 
-        new SysIdRoutine.Mechanism((
-            Measure<Voltage> volts) -> driveVoltage(volts.in(Volts)),
-             null, 
-             this)
-    );
-
-    private final SysIdRoutine steerRoutine = new SysIdRoutine(new SysIdRoutine.Config(
-        null, 
-        Volts.of(5), 
-        Seconds.of(6), 
-        (state) -> SignalLogger.writeString("state", state.toString())), 
-        new SysIdRoutine.Mechanism((
-            Measure<Voltage> volts) -> moduleIOs[0].steerVoltage(volts.in(Volts)),
-             null, 
-             this)
-        );
-
     public Swerve() {
 
         gyroIO = new GyroIOReal(canIDConstants.pigeon);
@@ -240,56 +218,8 @@ public class Swerve extends SubsystemBase{
         }
         
     }
-
-    public Command driveSysIdCmd(){
-        return Commands.sequence(
-            this.runOnce(() -> SignalLogger.start()),
-            driveRoutine
-                .quasistatic(Direction.kForward),
-                this.runOnce(() -> driveVoltage(0)),
-                Commands.waitSeconds(1),
-            driveRoutine
-                .quasistatic(Direction.kReverse),
-                this.runOnce(() -> driveVoltage(0)),
-                Commands.waitSeconds(1),  
-
-            driveRoutine
-                .dynamic(Direction.kForward),
-                this.runOnce(() -> driveVoltage(0)),
-                Commands.waitSeconds(1),  
-
-            driveRoutine
-                .dynamic(Direction.kReverse),
-                this.runOnce(() -> driveVoltage(0)),
-                Commands.waitSeconds(1), 
-            this.runOnce(() -> SignalLogger.stop())
-        );
-    }
-
-    public Command steerSysIdCmd(){
-        return Commands.sequence(
-        this.runOnce(() -> SignalLogger.start()),
-            steerRoutine
-                .quasistatic(Direction.kForward),
-                this.runOnce(() -> moduleIOs[0].steerVoltage(0)),
-                Commands.waitSeconds(1),
-            steerRoutine
-                .quasistatic(Direction.kReverse),
-                this.runOnce(() -> moduleIOs[0].steerVoltage(0)),
-                Commands.waitSeconds(1),  
-
-            steerRoutine
-                .dynamic(Direction.kForward),
-                this.runOnce(() -> moduleIOs[0].steerVoltage(0)),
-                Commands.waitSeconds(1),  
-
-            steerRoutine
-                .dynamic(Direction.kReverse),
-                this.runOnce(() -> moduleIOs[0].steerVoltage(0)),
-                Commands.waitSeconds(1), 
-            this.runOnce(() -> SignalLogger.stop())
-        );
-    }
+    
+    
     public SwerveModuleState[] getSetpointStates(){
         return setpointModuleStates;
     }

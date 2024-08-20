@@ -45,7 +45,6 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotInit() {
-      SignalLogger.setPath("/media/sda1/");
     
       Logger.recordMetadata("Marmalade", "RobotLogs");
 
@@ -60,6 +59,7 @@ public class Robot extends LoggedRobot {
       Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
     }
     Logger.start();
+    SignalLogger.setPath("/media/sda1/");
     m_robotContainer = new RobotContainer();
   }
 

@@ -15,7 +15,8 @@ public class OtbIntake extends SubsystemBase {
         setpointVolts = 0.0;
         pivotSetpoint = 0.0;
     }
-    
+
+    @Override    
     public void periodic(){
         otbintakeIO.updateInputs(inputs);
         Logger.processInputs("OTB_Intake", inputs);

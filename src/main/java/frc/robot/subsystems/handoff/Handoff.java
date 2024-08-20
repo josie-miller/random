@@ -12,7 +12,8 @@ public class Handoff extends SubsystemBase {
         this.handoffIO = handoffIO;
         setpointVolts = 0.0;
     }
-
+    
+    @Override
     public void periodic(){
         handoffIO.updateInputs(inputs);
         Logger.processInputs("Handoff", inputs);

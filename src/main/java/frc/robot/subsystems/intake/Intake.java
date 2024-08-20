@@ -13,6 +13,7 @@ public class Intake extends SubsystemBase {
         setpointVolts = 0.0;
     }
 
+    @Override
     public void periodic(){
         intakeIO.updateInputs(inputs);
         Logger.processInputs("Intake", inputs);

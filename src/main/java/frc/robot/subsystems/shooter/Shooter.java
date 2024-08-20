@@ -15,6 +15,7 @@ public class Shooter extends SubsystemBase{
         setpointVelocity = 0.0;
     }
 
+    @Override
     public void periodic(){
         shooterIO.updateInputs(inputs);
         Logger.processInputs("Shooter", inputs);
