@@ -26,14 +26,6 @@ public class Robot extends LoggedRobot {
 
   private RobotContainer m_robotContainer;
 
-  SequentialCommandGroup choreo_test;
-  SequentialCommandGroup two_piece_amp;
-  SequentialCommandGroup two_piece_mid;
-  SequentialCommandGroup two_piece_source;
-  SequentialCommandGroup preload_amp;
-  SequentialCommandGroup preload_mid;
-  SequentialCommandGroup preload_source;
-
 
   @Override
   public void robotInit() {
@@ -72,8 +64,7 @@ public class Robot extends LoggedRobot {
   public void disabledExit() {}
 
   @Override
-  public void autonomousInit() {
-
+  public void autonomousInit() {   
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
