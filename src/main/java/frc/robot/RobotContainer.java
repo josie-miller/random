@@ -19,6 +19,7 @@ import frc.robot.subsystems.otb_intake.OtbIntakeIOReal;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIOReal;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.commands.runShooter;
 import frc.robot.constants.commandConstants;
 
 public class RobotContainer {
@@ -52,8 +53,8 @@ public class RobotContainer {
 
         operator.y()
             .onTrue(swerve.steerSysIdCmd());
-
-
+        operator.leftBumper()
+            .onTrue(new runShooter(shooter, 4));
     }
 
     public void getAutonomousCommand() {

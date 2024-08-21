@@ -8,6 +8,7 @@ import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -66,6 +67,10 @@ public class Shooter extends SubsystemBase{
     public void periodic(){
         shooterIO.updateInputs(inputs);
         Logger.processInputs("Shooter", inputs);
+    }
+
+    public Command setVoltage(double voltage){
+        return new InstantCommand(() -> shooterIO.setVoltage(voltage));
     }
 
     public void setVelocity(double velocity, double ratio) {
