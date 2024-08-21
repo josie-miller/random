@@ -54,7 +54,7 @@ public class RobotContainer {
         operator.y()
             .onTrue(swerve.steerSysIdCmd());
         operator.leftBumper()
-            .onTrue(new runShooter(shooter, 4));
+            .whileTrue(new RunCommand(() -> shooter.setVoltage(4)));
     }
 
     public void getAutonomousCommand() {
