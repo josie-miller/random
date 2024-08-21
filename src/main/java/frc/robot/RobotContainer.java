@@ -42,19 +42,17 @@ public class RobotContainer {
     private void configureButtonBindings() {
 
         operator.a() 
-            .onTrue(elevator.runSysIdCmd());
+            .onTrue(elevator.elevatorSysIdCmd());
 
         operator.b()
-            .onTrue(otbIntake.runSysIdCmd());
-
-        operator.x()
             .onTrue(shooter.shooterSysIdCmd());
 
-        operator.rightTrigger()
+        operator.x()
             .onTrue(swerve.driveSysIdCmd());
 
-        operator.leftTrigger()
+        operator.y()
             .onTrue(swerve.steerSysIdCmd());
+
 
     }
 

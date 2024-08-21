@@ -36,7 +36,7 @@ public class Elevator extends SubsystemBase {
         elevatorIO.setMotionMagicSetpoint(setpointRotations);
     }
 
-    public Command runSysIdCmd(){
+    public Command elevatorSysIdCmd(){
         return Commands.sequence(
             this.runOnce(() -> SignalLogger.start()),
             elevatorRoutine
@@ -46,17 +46,17 @@ public class Elevator extends SubsystemBase {
                 Commands.waitSeconds(1),
             elevatorRoutine
                 .quasistatic(Direction.kReverse)
-                .until(() -> inputs.elevatorHeightMeters > 0.2),
+                .until(() -> inputs.elevatorHeightMeters < 0.2),
                 this.runOnce(() -> elevatorIO.setVoltage(0)),
                 Commands.waitSeconds(1),  
             elevatorRoutine
                 .dynamic(Direction.kForward)
-                .until(() -> inputs.elevatorHeightMeters > 0.2),
+                .until(() -> inputs.elevatorHeightMeters > elevatorConstants.maxHeightMeters - 0.2),
                 this.runOnce(() -> elevatorIO.setVoltage(0)),
                 Commands.waitSeconds(1),  
             elevatorRoutine
                 .dynamic(Direction.kReverse)
-                .until(() -> inputs.elevatorHeightMeters > 0.2),
+                .until(() -> inputs.elevatorHeightMeters < 0.2),
                 this.runOnce(() -> elevatorIO.setVoltage(0)),
                 Commands.waitSeconds(1), 
             this.runOnce(() -> SignalLogger.stop())
